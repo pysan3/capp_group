@@ -2,6 +2,7 @@
 
 *.exe
 *.out
+build/
 
 # これ以降はVisual Studioの各種設定ファイル
 # User-specific files
