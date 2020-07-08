@@ -11,6 +11,7 @@ typedef struct {
 #define PLAYER_HEIGHT 10
 
 typedef struct {
+    int id;
     Coordinate location;
     int hp;
     char name[100];
