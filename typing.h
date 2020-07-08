@@ -39,8 +39,10 @@ typedef struct {
 #define FIELD_MAX_Y 100
 #define FIELD_MAX_Z 100
 
+#define ENEMY_NUM 1
+
 typedef struct {
     Player me;
-    Player enemies[1];
+    Player enemies[ENEMY_NUM];
     unsigned long long elapsed_time;
 } FieldInfo;
