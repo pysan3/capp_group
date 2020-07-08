@@ -1,5 +1,6 @@
 #define _USE_MATH_DEFINES
 
+#include "../header.h"
 #include "characters.h"
 #include <stdlib.h>
 #include <math.h>
