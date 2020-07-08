@@ -1,5 +1,4 @@
 #include "header.h"
-#include "characters/characters.h"
 
 #include <stdlib.h>
 #ifndef M_PI
