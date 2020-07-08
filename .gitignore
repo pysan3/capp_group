@@ -4,7 +4,16 @@
 *.out
 build/
 
+test*
+
+websocket/*
+!websocket/*.[hc]
+!websocket/ws_api/
+
 # これ以降はVisual Studioの各種設定ファイル
+
+.vscode/
+
 # User-specific files
 *.rsuser
 *.suo
