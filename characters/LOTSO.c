@@ -3,11 +3,8 @@
 #include "characters.h"
 #include <stdio.h>
 #include <stdlib.h>
-//#include <OpenGL/opengl.h>
-//#include <GLUT/GLUT.h>
 #include <math.h>
 #include <string.h>
-
 
 void pinkpart(){
     int i;
@@ -21,7 +18,7 @@ void pinkpart(){
     glutSolidSphere(0.8,30,30);
     glTranslatef(0.8,0.3,0.0);
     glutSolidTorus(0.2, 0.3, 30,30);
-    
+
     glTranslatef(-1.6,0,0);
     glutSolidTorus(0.2, 0.3, 30, 30);
     glTranslatef(0.8,-0.3,-0.1);
@@ -55,7 +52,7 @@ void pinkpart(){
         glTranslatef(0,0,0.01);
         glutSolidSphere(0.31-o,30,30);
         o=o+0.01;
-      
+
     }
     glPopMatrix();
     glPushMatrix();
@@ -73,7 +70,7 @@ void pinkpart(){
         glTranslatef(0,0,0.01);
         glutSolidSphere(0.31-o,30,30);
         o=o+0.01;
-        
+
     }
     glPopMatrix();
     glTranslatef(-0.3, 0, 1.0);
@@ -86,8 +83,8 @@ void pinkpart(){
         glTranslatef(0,0,-0.05);
         glutSolidSphere(0.7, 30, 30);
     }
-   
-    
+
+
 }
 
 void whitepart(){
@@ -132,7 +129,7 @@ void darkpinkpart(){
     glutSolidCube(0.2);
     glTranslatef(-0.2,0,0);
     glutSolidCube(0.2);
-   
+
 }
 void blackpart(){
     GLfloat black[]={.0,.0,.0,1.0};
@@ -144,13 +141,9 @@ void blackpart(){
     glutSolidSphere(0.15, 30, 30);
     glTranslatef(-0.3,0,0);
     glutSolidSphere(0.15,30,30);
-    
 }
 
-void draw_LOTSO(void)
-{
-	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void draw_LOTSO(void) {
     glTranslatef(0,0.3,0);
 	glPushMatrix();
     pinkpart();
@@ -158,11 +151,4 @@ void draw_LOTSO(void)
     whitepart();
     darkpinkpart();
     blackpart();
-    
-
-	glPopMatrix();
-	glutSwapBuffers();
 }
-
-
-
