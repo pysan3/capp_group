@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../header.h"
+
 void draw_doraemon(void);
 
 typedef enum {
