@@ -42,4 +42,5 @@ typedef struct {
 typedef struct {
     Player me;
     Player enemies[1];
+    unsigned long long elapsed_time;
 } FieldInfo;
