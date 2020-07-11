@@ -91,7 +91,6 @@ void whitepart(){
     GLfloat white[]={1.0,1.0,1.0,1.0};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glMaterialf(GL_FRONT, GL_SHININESS, 10.0);
-    glPopMatrix();
     glPushMatrix();
     glTranslatef(0, 0, 0.7);
     glutSolidSphere(0.7, 30, 30);
@@ -106,13 +105,13 @@ void whitepart(){
     glutSolidSphere(0.18, 30, 30);
     glTranslatef(0.15,-2.5,-0.30);
     glutSolidSphere(0.9,30,30);
+    glPopMatrix();
 }
 
 void darkpinkpart(){
     GLfloat darkpink[]={0.2,0.06,0.13,1.0};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, darkpink);
     glMaterialf(GL_FRONT, GL_SHININESS, 10.0);
-    glPopMatrix();
     glPushMatrix();
     glTranslatef(0,0.3,1.3);
     glRotatef(30, 0, 0, 1);
@@ -129,22 +128,23 @@ void darkpinkpart(){
     glutSolidCube(0.2);
     glTranslatef(-0.2,0,0);
     glutSolidCube(0.2);
+    glPopMatrix();
 
 }
 void blackpart(){
     GLfloat black[]={.0,.0,.0,1.0};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
     glMaterialf(GL_FRONT, GL_SHININESS, 10.0);
-    glPopMatrix();
     glPushMatrix();
     glTranslatef(0.15,0.7,0.85);
     glutSolidSphere(0.15, 30, 30);
     glTranslatef(-0.3,0,0);
     glutSolidSphere(0.15,30,30);
+    glPopMatrix();
 }
 
 void draw_LOTSO(void) {
-    glTranslatef(0,0.3,0);
+    // glTranslatef(0,0.3,0);
 	glPushMatrix();
     pinkpart();
     glPopMatrix();
