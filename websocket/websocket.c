@@ -9,7 +9,7 @@
 int isOnline;
 
 int ws_createNewGameID(void) {
-    if (isOnline) return multi_createNewGameID;
+    if (isOnline) return multi_createNewGameID();
     else {
         fprintf(stderr, "do not create new game ID on offline gamemode\n");
         exit(1);
