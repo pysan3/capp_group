@@ -20,6 +20,7 @@ include_directories(${INCLUDE_DIRS})
 FILE(GLOB player_files Player/*.c)
 add_library(player SHARED ${player_files})
 target_include_directories(player PRIVATE Player/)
+target_include_directories(player PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 FILE(GLOB characters_files characters/*.c)
 add_library(characters SHARED ${characters_files})
