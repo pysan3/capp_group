@@ -33,7 +33,6 @@ FILE(GLOB websocket_files websocket/*.c)
 add_library(websocket SHARED ${websocket_files})
 target_include_directories(websocket PRIVATE websocket/)
 target_link_libraries(websocket PRIVATE ws_api)
->>>>>>> development
 
 FILE(GLOB characters_files characters/*.c)
 add_library(characters SHARED ${characters_files})
