@@ -37,7 +37,7 @@ void display(void) {
     glRotatef(0.5, 0, 0, 1);
 
     // ここにdoraemonを追加した
-    draw_character(KATANA);
+    draw_character(LOTSO);
 
     print_axes();
 

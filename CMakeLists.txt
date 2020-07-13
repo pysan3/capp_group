@@ -17,6 +17,10 @@ set(INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
 set(LIBRARIES ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 include_directories(${INCLUDE_DIRS})
 
+FILE(GLOB player_files Player/*.c)
+add_library(player SHARED ${player_files})
+target_include_directories(player PRIVATE Player/)
+
 FILE(GLOB characters_files characters/*.c)
 add_library(characters SHARED ${characters_files})
 target_link_libraries(characters PRIVATE ${LIBRARIES})

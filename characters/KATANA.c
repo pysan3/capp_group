@@ -62,7 +62,7 @@ GLdouble vertex2[][3]={//兜金
 };
 
 
-int face[][4] = {
+int face1[][4] = {
 		{ 0, 3, 2, 1 },
 		{ 1, 2, 6, 5 },
 		{ 4, 5, 6, 7 },
@@ -71,7 +71,7 @@ int face[][4] = {
 		{ 3, 7, 6, 2 }
 };
 
-GLdouble norm[][3] = {
+GLdouble norm1[][3] = {
 		{ 0.0, 0.0, -1.0 },
 		{ 1.0, 0.0, 0.0 },
 		{ 0.0, 0.0, 1.0 },
@@ -95,9 +95,9 @@ void saya(void)
 
 	glBegin(GL_QUADS);
 	for (j = 0; j < 6; j++) {
-		glNormal3dv(norm[j]);
+		glNormal3dv(norm1[j]);
 		for (i = 0; i < 4; i++) {
-			glVertex3dv(vertex[face[j][i]]);
+			glVertex3dv(vertex[face1[j][i]]);
 		}
 	}
 	glEnd();
@@ -139,9 +139,9 @@ void tuka(void)
 
 	glBegin(GL_QUADS);
 	for (j = 0; j < 6; j++) {
-		glNormal3dv(norm[j]);
+		glNormal3dv(norm1[j]);
 		for (i = 0; i < 4; i++) {
-			glVertex3dv(vertex1[face[j][i]]);
+			glVertex3dv(vertex1[face1[j][i]]);
 		}
 	}
 	glEnd();
@@ -167,31 +167,12 @@ void kabutogane(void)
 
 	glBegin(GL_QUADS);
 	for (j = 0; j < 6; j++) {
-		glNormal3dv(norm[j]);
+		glNormal3dv(norm1[j]);
 		for (i = 0; i < 4; i++) {
-			glVertex3dv(vertex2[face[j][i]]);
+			glVertex3dv(vertex2[face1[j][i]]);
 		}
 	}
 	glEnd();
-}
-
-void sageo(void){
-	int i;
-	glLineWidth(1000.0);
-	glBegin(GL_LINE_STRIP);
-  	for (i = 0; i <= 30; i++) {
-      	glEvalCoord1f((GLfloat) i/30.0);
-	}
-  	glEnd();
-
-	//glPointSize(5.0); //制御点
-	//glBegin(GL_POINTS);
-  	//for (i = 0; i < 4; i++) {
-  	//glVertex3fv(&ctrlpoints[i][0]);
-	//}
-  	//glEnd();
-
-  	glFlush();
 }
 
 void draw_KATANA(void)
@@ -227,10 +208,6 @@ void draw_KATANA(void)
 	glMaterialfv(GL_FRONT, GL_SPECULAR, blackspe);
 	glMaterialfv(GL_FRONT, GL_SHININESS, &blacksh);
 	kabutogane();//兜金の部分
-	glMaterialfv(GL_FRONT, GL_AMBIENT, orangeam);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, orangediff);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, orangespe);
-	glMaterialfv(GL_FRONT, GL_SHININESS, &orangesh);
 }
 
 
