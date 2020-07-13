@@ -7,11 +7,11 @@
 #define PI2 (3.1415*2)
 #define N 50
 
-GLfloat face[] = { 199.0 / 255.0, 130.0 / 255.0, 18.0 / 255.0, 1.0 };
-GLfloat black[] = { 0, 0, 0, 1 };
-GLfloat white[] = { 1, 1, 1, 1 };
-GLfloat yellow[] = { 253.0 / 255.0, 208.0 / 255.0, 0.0 / 255.0, 1.0 };
-GLfloat green[] = { 0.3, 1.0, 0.0 };
+GLfloat ktface[] = { 199.0 / 255.0, 130.0 / 255.0, 18.0 / 255.0, 1.0 };
+GLfloat ktblack[] = { 0, 0, 0, 1 };
+GLfloat ktwhite[] = { 1, 1, 1, 1 };
+GLfloat ktyellow[] = { 253.0 / 255.0, 208.0 / 255.0, 0.0 / 255.0, 1.0 };
+GLfloat ktgreen[] = { 0.3, 1.0, 0.0 };
 
 #define W 30
 #define H 8
@@ -26,12 +26,12 @@ char mouthshape[H][W] = {
 		{ "                             " },
 };
 
-void mouth(void){
+void ktmouth(void){
 	int i, j;
 
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, black);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktblack);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktblack);
 
 	glPushMatrix();
 	glScalef(1.0, 0.6, 0.6);
@@ -51,12 +51,12 @@ void mouth(void){
 	glPopMatrix();
 }
 
-void nose(void)
+void ktnose(void)
 {   
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktblack);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
 	glMaterialf(GL_FRONT, GL_SHININESS, 1000.0);
 
 	glColor3d(0.0, 0.0, 0.0);
@@ -67,9 +67,9 @@ void nose(void)
 
 void mouth_around(void) {
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktwhite);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
 	glMaterialf(GL_FRONT, GL_SHININESS, 1000.0);
 
 	glScalef(1.5, 1.2, 0.7);
@@ -78,10 +78,10 @@ void mouth_around(void) {
 	glPopMatrix();
 }
 
-void eye(void) {
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+void kteye(void) {
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktblack);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
 	glMaterialf(GL_FRONT, GL_SHININESS, 1000.0);
 
 	glPushMatrix();
@@ -94,16 +94,16 @@ void eye(void) {
 	glPopMatrix();
 }
 
-void head(void) {
+void kthead(void) {
 	glPushMatrix();
-	mouth();
-	nose();
+	ktmouth();
+	ktnose();
 	mouth_around();
-	eye();
+	kteye();
 
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, face);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
 
 	glScalef(1.5, 1.2, 1);
 	glTranslatef(0, 0.7, -3);
@@ -140,9 +140,9 @@ void ktCylinder(double x)
 
 void ear_inside(void) {
 	
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, yellow);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, yellow);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktyellow);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktyellow);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktyellow);
 
 	glTranslatef(0, 0, 0.01);
 	glScalef(0.75, 0.75, 1.0);
@@ -150,9 +150,9 @@ void ear_inside(void) {
 }
 
 void ear_outside(void) {
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, face);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, face);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktface);
 	glPushMatrix();
 	glScalef(0.8, 0.8, 1.0);
 	ktCylinder(0.5);
@@ -160,7 +160,7 @@ void ear_outside(void) {
 	glPopMatrix();
 }
 
-void ear(void) {
+void ktear(void) {
 	glPushMatrix();
 	glTranslatef(1.8, 2.0, -0.6);
 	ear_outside();
@@ -172,20 +172,20 @@ void ear(void) {
 void body_inside(void) {
 	glTranslatef(0.0, -2.75, -2.0);
 	glScalef(1.1, 1.25, 0.5);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktwhite);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
 	glutSolidSphere(1.0, 30, 30);
 }
 
-void body(void) {
+void ktbody(void) {
 	glPushMatrix();
 	glScalef(2.2, 2.2, 1.4);
 	glTranslatef(0.0, -3.0, -2.3);
 	glRotatef(90, 1, 0, 0);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, face);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, face);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktface);
 	ktCylinder(2.0);
 	glPopMatrix();
 	glPushMatrix();
@@ -195,39 +195,39 @@ void body(void) {
 
 void leg_inside(void) {
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, yellow);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktyellow);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktyellow);
 	glTranslatef(0.0, 0.0, 0.01);
 	glScalef(0.8, 0.8, 1.0);
 	ktCylinder(0.5);
 	glPopMatrix();
 }
 
-void leg(void) {
+void ktleg(void) {
 	glPushMatrix();
 	glScalef(0.7, 0.7, 1.0);
 	glTranslatef(1.7, -5.5, 0.0);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, face);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
 	glMaterialf(GL_FRONT, GL_SHININESS, 1000.0);
 	ktCylinder(2.0);
 	leg_inside();
 	glTranslatef(-3.4, 0.0, 0.0);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, face);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
 	glMaterialf(GL_FRONT, GL_SHININESS, 1000.0);
 	ktCylinder(2.0);
 	leg_inside();
 	glPopMatrix();
 }
 
-void arm(void) {
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, face);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, face);
+void ktarm(void) {
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, ktface);
 
 	GLfloat i = 3.8;
 	glPushMatrix();
@@ -237,17 +237,17 @@ void arm(void) {
 
 	ktCylinder(1.5);
 	glTranslatef(-2*i, 0.0, 0.0);
-	Cylinder(1.5);
+	ktCylinder(1.5);
 	glPopMatrix();
 }
 
 
 void draw_Rilakkuma(void)
 {
-	head();
-	ear();
-	body();
-	leg();
-	arm();
+	kthead();
+	ktear();
+	ktbody();
+	ktleg();
+	ktarm();
 }
 
