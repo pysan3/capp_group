@@ -206,8 +206,9 @@ void leg_inside(void) {
 
 void ktleg(void) {
 	glPushMatrix();
-	glScalef(0.7, 0.7, 1.0);
-	glTranslatef(1.7, -5.5, 0.0);
+	glScalef(0.7, 1.0, 0.7);
+	glTranslatef(1.7, -7.0, -4.5);
+	glRotatef(90, 1, 0, 0);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
