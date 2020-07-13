@@ -20,7 +20,7 @@ int multi_init(int id) {
 }
 
 pid_t multi_createPlayer(Player *p, int *id) {
-	return 0;
+	return 1;
 }
 
 pid_t multi_sendPlayer(Player *p) {
