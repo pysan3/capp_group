@@ -6,7 +6,7 @@
 void cc_makeme()
 
 //Player enemiesを生成
-void cc_makeenemie()
+void cc_makeenemy()
 
 //char *name を生成する
 char *name()
