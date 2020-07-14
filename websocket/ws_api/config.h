@@ -14,8 +14,9 @@
 #define HAVE_LIBPTHREAD 1
 
 /* Define to 1 if you have the `ssl' library (-lssl). */
+#ifndef __APPLE__
 #define HAVE_LIBSSL 1
-
+#endif
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
 #define HAVE_MALLOC 1
