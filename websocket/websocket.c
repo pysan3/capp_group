@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 
 int isOnline;
 
@@ -33,25 +34,25 @@ int ws_close(int gameID) {
     : cp_close(isOnline);
 }
 
-pid_t ws_createPlayer(Player *p, int *id) {
+pthread_t ws_createPlayer(Player *p, int *id) {
     return isOnline
     ? multi_createPlayer(p, id)
     : cp_createPlayer(p, id);
 }
 
-pid_t ws_sendPlayer(Player *p) {
+pthread_t ws_sendPlayer(Player *p) {
     return isOnline
     ? multi_sendPlayer(p)
     : cp_sendPlayer(p);
 }
 
-pid_t ws_sendNewBullet(int player_id, Bullet *b) {
+pthread_t ws_sendNewBullet(int player_id, Bullet *b) {
     return isOnline
     ? multi_sendNewBullet(player_id, b)
     : cp_sendNewBullet(player_id, b);
 }
 
-pid_t ws_sendNewWall(int player_id, Wall *w) {
+pthread_t ws_sendNewWall(int player_id, Wall *w) {
     return isOnline
     ? multi_sendNewWall(player_id, w)
     : cp_sendNewWall(player_id, w);
@@ -81,7 +82,7 @@ Wall *ws_getNewWall(int player_id) {
     : cp_getNewWall(player_id);
 }
 
-pid_t ws_loadEnemies(int player_id, Player *e[]) {
+pthread_t ws_loadEnemies(int player_id, Player *e[]) {
     return isOnline
     ? multi_loadEnemies(player_id, e)
     : cp_loadEnemies(player_id, e);

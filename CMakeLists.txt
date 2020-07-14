@@ -52,7 +52,7 @@ target_link_libraries(Wall PRIVATE ${LIBRARIES})
 target_include_directories(Wall PRIVATE Wall/)
 target_include_directories(Wall PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(main main.c)
+add_executable(main test.c)
 
 target_link_libraries(main PRIVATE characters object websocket player Wall)
 
