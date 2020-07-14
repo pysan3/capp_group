@@ -14,24 +14,24 @@ int multi_createNewGameID(void) {
 	return 0;
 }
 
-int multi_init(int id) {
+int multi_init(int id, int *time) {
 	gameID = id;
 	return gameID == id;
 }
 
 pid_t multi_createPlayer(Player *p, int *id) {
-	return 0;
+	return 1;
 }
 
 pid_t multi_sendPlayer(Player *p) {
 	return 0;
 }
 
-pid_t multi_sendNewBullet(Bullet *b) {
+pid_t multi_sendNewBullet(int player_id, Bullet *b) {
 	return 0;
 }
 
-pid_t multi_sendNewWall(Wall *w) {
+pid_t multi_sendNewWall(int player_id, Wall *w) {
 	return 0;
 }
 
@@ -39,15 +39,19 @@ Player *multi_getEnemyInfo(int id) {
 	return NULL;
 }
 
-Bullet *multi_getNewBullet(void) {
+Player **multi_getAllEnemyInfo(int player_id) {
 	return NULL;
 }
 
-Wall *multi_getNewWall(void) {
+Bullet *multi_getNewBullet(int player_id) {
 	return NULL;
 }
 
-pid_t multi_loadEnemies(Player *e) {
+Wall *multi_getNewWall(int player_id) {
+	return NULL;
+}
+
+pid_t multi_loadEnemies(int player_id, Player *e[]) {
 	return 0;
 }
 
