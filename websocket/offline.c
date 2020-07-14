@@ -191,11 +191,7 @@ Wall *cp_getNewWall(int player_id) {
 }
 
 #define MICRO 1000000
-<<<<<<< HEAD
-pid_t cp_loadplayers(int player_id, Player *e[]) {
-=======
 pid_t cp_loadEnemies(int player_id, Player *e[]) {
->>>>>>> 92a75cb56bf5a3bef501b0037be25b93d9ff3813
     pid_t pid;
     if ((pid = fork()) == 0) {
         while (1) {
