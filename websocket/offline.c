@@ -36,9 +36,9 @@ int cp_close(int gameID) {
     return 0;
 }
 
-pid_t cp_createPlayer(Player *p, int *id) {
-    pid_t pid;
-    if ((pid = fork()) == 0) {
+pthread_t cp_createPlayer(Player *p, int *id) {
+    pthread_t tid;
+    if ((tid = fork()) == 0) {
         pthread_mutex_lock(players.l_mut);
         *id = players.length;
         players.list[players.length++] = p;
@@ -53,19 +53,19 @@ pid_t cp_createPlayer(Player *p, int *id) {
         printf("DEBUG: created player\n");
         return 0;
     } else {
-        return pid;
+        return tid;
     }
 }
 
-pid_t cp_sendPlayer(Player *p) {
-    pid_t pid;
-    if ((pid = fork()) == 0) {
+pthread_t cp_sendPlayer(Player *p) {
+    pthread_t tid;
+    if ((tid = fork()) == 0) {
         pthread_mutex_lock(players.p_mut[p->id]);
         players.list[p->id] = p;
         pthread_mutex_unlock(players.p_mut[p->id]);
         return 0;
     } else {
-        return pid;
+        return tid;
     }
 }
 
@@ -117,9 +117,9 @@ Bullet *cp_bullet_pop_front(BulletList *list) {
     return b;
 }
 
-pid_t cp_sendNewBullet(int player_id, Bullet *b) {
-    pid_t pid;
-    if ((pid = fork()) == 0) {
+pthread_t cp_sendNewBullet(int player_id, Bullet *b) {
+    pthread_t tid;
+    if ((tid = fork()) == 0) {
         for (int i=0; i<players.length; i++) {
             if (i != player_id) {
                 cp_bullet_append(&bulletlist[i], b);
@@ -127,7 +127,7 @@ pid_t cp_sendNewBullet(int player_id, Bullet *b) {
         }
         return 0;
     } else {
-        return pid;
+        return tid;
     }
 }
 
@@ -172,9 +172,9 @@ Wall *cp_wall_pop_front(WallList *list) {
     return w;
 }
 
-pid_t cp_sendNewWall(int player_id, Wall *w) {
-    pid_t pid;
-    if ((pid = fork()) == 0) {
+pthread_t cp_sendNewWall(int player_id, Wall *w) {
+    pthread_t tid;
+    if ((tid = fork()) == 0) {
         for (int i=0; i<players.length; i++) {
             if (i != player_id) {
                 cp_wall_append(&walllist[i], w);
@@ -182,7 +182,7 @@ pid_t cp_sendNewWall(int player_id, Wall *w) {
         }
         return 0;
     } else {
-        return pid;
+        return tid;
     }
 }
 
@@ -191,9 +191,9 @@ Wall *cp_getNewWall(int player_id) {
 }
 
 #define MICRO 1000000
-pid_t cp_loadEnemies(int player_id, Player *e[]) {
-    pid_t pid;
-    if ((pid = fork()) == 0) {
+pthread_t cp_loadEnemies(int player_id, Player *e[]) {
+    pthread_t tid;
+    if ((tid = fork()) == 0) {
         while (1) {
             if (players.length >= ENEMY_NUM + 1) {
                 break;
@@ -215,6 +215,6 @@ pid_t cp_loadEnemies(int player_id, Player *e[]) {
         }
         return 0;
     } else {
-        return pid;
+        return tid;
     }
 }
