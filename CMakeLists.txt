@@ -72,4 +72,4 @@ target_link_libraries(main PRIVATE characters object websocket player Wall)
 
 target_link_libraries(main PRIVATE ${LIBRARIES})
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
+# target_compile_options(main PRIVATE -pthread)
