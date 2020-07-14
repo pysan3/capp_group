@@ -17,6 +17,12 @@ set(INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
 set(LIBRARIES ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 include_directories(${INCLUDE_DIRS})
 
+# player (yoshie)
+FILE(GLOB player_files Player/*.c)
+add_library(player SHARED ${player_files})
+target_include_directories(player PRIVATE Player/)
+target_include_directories(player PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
 # websocket (takuto)
 FILE(GLOB ws_api_files websocket/ws_api/*.c)
 add_library(ws_api SHARED ${ws_api_files})
@@ -66,4 +72,4 @@ target_link_libraries(main PRIVATE characters object websocket player Wall)
 
 target_link_libraries(main PRIVATE ${LIBRARIES})
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-# target_compile_options(main PRIVATE -pthread)
+
