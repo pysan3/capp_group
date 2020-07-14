@@ -42,7 +42,11 @@ typedef struct {
 #define ENEMY_NUM 1
 
 typedef struct {
-    Player me;
-    Player enemies[ENEMY_NUM];
+    Player *me;
+    Player *enemies[ENEMY_NUM];
+    Player *cannon[100];
+    Bullet *bullets[1000];
+    Wall *walls[1000];
     unsigned long long elapsed_time;
+    int isOnline;
 } FieldInfo;
