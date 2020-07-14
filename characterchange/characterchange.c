@@ -2,11 +2,7 @@
 
 
 
-void cc_makeme(){}
-
-void cc_makeenemy(){}
-
-char *name(){}
+void cc_makeme(&fieldinfo){}
 
 void cc_window(){}
 
