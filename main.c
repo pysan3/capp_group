@@ -1,5 +1,4 @@
 #include "header.h"
-#include "characters/characters.h"
 
 #include <stdlib.h>
 #ifndef M_PI
@@ -17,13 +16,13 @@ void print_axes(void) {
     glPushMatrix();
     glTranslatef(0, 0, 0);
     glBegin(GL_LINES);
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
+    // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
     glVertex3f(5, 0, 0);
     glVertex3f(0, 0, 0);
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
+    // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
     glVertex3f(0, 5, 0);
     glVertex3f(0, 0, 0);
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
+    // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
     glVertex3f(0, 0, 5);
     glVertex3f(0, 0, 0);
     glEnd();
@@ -35,10 +34,10 @@ void display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // 回転するにはここのコメントを外す
-    glRotatef(0.5, 0, 0, 1);
+    glRotatef(0.5, 0, 1, 0);
 
     // ここにdoraemonを追加した
-    draw_character(DORAEMON);
+    draw_character(LOTSO);
 
     print_axes();
 
@@ -73,7 +72,7 @@ void init(void) {
     gluPerspective(45.0, 1, 1.0, 100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(7, 3, 2, 0, 0, 0, 0, 0, 1);
+    gluLookAt(2, 3, 7, 0, 0, 0, 0, 1, 0);
 }
 
 int main(int argc, char *argv[]) {
