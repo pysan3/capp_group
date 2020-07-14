@@ -2,6 +2,7 @@
 
 #include "../header.h"
 #include <sys/wait.h>
+#include <unistd.h>
 
 // ゲームIDを新規作成する場合に呼び出す
 // 戻り値:新規作成したゲームのID
