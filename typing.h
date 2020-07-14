@@ -47,6 +47,6 @@ typedef struct {
     Player *cannon[100];
     Bullet *bullets[1000];
     Wall *walls[1000];
-    unsigned long long elapsed_time;
+    int elapsed_time;
     int isOnline;
 } FieldInfo;
