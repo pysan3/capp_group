@@ -40,10 +40,16 @@ target_link_libraries(object PRIVATE ${LIBRARIES})
 target_include_directories(object PRIVATE object/)
 target_include_directories(object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
+FILE(GLOB Bullet_files Bullet/*.c)
+add_library(Bullet SHARED ${Bullet_files})
+target_link_libraries(Bullet PRIVATE ${LIBRARIES})
+target_include_directories(Bullet PRIVATE Bullet/)
+target_include_directories(Bullet PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
 
 add_executable(main main.c)
 
-target_link_libraries(main PRIVATE characters object websocket)
+target_link_libraries(main PRIVATE characters object websocket Bullet)
 
 target_link_libraries(main PRIVATE ${LIBRARIES})
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
