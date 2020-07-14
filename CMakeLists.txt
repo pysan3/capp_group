@@ -40,10 +40,15 @@ target_link_libraries(object PRIVATE ${LIBRARIES})
 target_include_directories(object PRIVATE object/)
 target_include_directories(object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
+FILE(GLOB Wall_files Wall/*.c)
+add_library(Wall SHARED ${Wall_files})
+target_link_libraries(Wall PRIVATE ${LIBRARIES})
+target_include_directories(Wall PRIVATE Wall/)
+target_include_directories(Wall PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(main main.c)
 
-target_link_libraries(main PRIVATE characters object websocket)
+target_link_libraries(main PRIVATE characters object websocket Wall)
 
 target_link_libraries(main PRIVATE ${LIBRARIES})
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
