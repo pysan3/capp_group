@@ -19,6 +19,10 @@ int multi_init(int id, int *time) {
 	return gameID == id;
 }
 
+int multi_close(int gameID) {
+	return 0;
+}
+
 pid_t multi_createPlayer(Player *p, int *id) {
 	return 1;
 }
