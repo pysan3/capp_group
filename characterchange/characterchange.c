@@ -4,7 +4,7 @@
 
 void cc_makeme(){}
 
-void cc_makeenemie(){}
+void cc_makeenemy(){}
 
 char *name(){}
 
