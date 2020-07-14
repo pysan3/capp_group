@@ -1,4 +1,5 @@
 #include "offline.h"
+#include <stdio.h>
 
 int cp_init(int gameID) {
     return 0;
