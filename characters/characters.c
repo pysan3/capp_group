@@ -11,6 +11,9 @@ void draw_character(Character c) {
         case KATANA:
             draw_KATANA();
             break;
+        case RILAKKUMA:
+            draw_Rilakkuma();
+            break;
         // case ここ:
         //     draw_ここ();
         //     break;
