@@ -5,65 +5,59 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <signal.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 int elapsed;
+pid_t enemy_process[ENEMY_NUM];
 
-void update_offline_enemy(int *index) {
-    int i = *index;
-    char name[100];
-    sprintf(name, "enemy%d", i);
-    Player e = {0, {i, 0, i}, 100, "", 0, 0, DORAEMON};
-    strncpy(e.name, name, strlen(name));
-    pthread_t tid = ws_createPlayer(&e, &e.id);
-    pthread_join(tid, NULL);
-    printf("enemy %d, id: %d, hp: %d\n", i, e.id, e.hp);
-    tid = ws_loadEnemies(e.id, NULL);
-    pthread_join(tid, NULL);
-    while (1) {
-        Coordinate v = {
-            (rand() + 1.0) / (RAND_MAX + 2.0),
-            0,
-            (rand() + 1.0) / (RAND_MAX + 2.0)
-        };
-        e.location.x += v.x;
-        e.location.y += v.y;
-        e.location.z += v.z;
-        Coordinate hitSpace[4];
-        double width = 0.5, depth = 0.7;
-        for (int i=0; i<4; i++) {
-            hitSpace[i].x = ((i < 2) * 2 - 1) * width;
-            hitSpace[i].z = ((i & 1) * 2 - 1) * depth;
-        }
-        // e.hp -= bullet_hit(&hitSpace);
-        e.hp -= 10;
-        sleep(1);
-        // printf("%d %d %s %d %d\n", e.id, e.hp, e.name, e.sleep_bullet, e.sleep_wall);
-        ws_sendPlayer(&e);
-        if (e.hp <= 0) {
-            printf("%s (id: %d) is dead\n", e.name, e.id);
-            ws_dead(e.id);
-            break;
-        }
+void kill_all_process(int sig) {
+    printf("got SIGINT\n");
+    for (int i=0; i<ENEMY_NUM; i++) {
+        kill(enemy_process[i], SIGINT);
+        printf("killed process %d\n", i + 1);
     }
+    exit(EXIT_SUCCESS);
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
     pthread_t tid;
     FieldInfo f_info;
     f_info.elapsed_time = 10;
-    f_info.isOnline = 0;
-    ws_init(f_info.isOnline, &f_info.elapsed_time);
-
-    pthread_t enemy_threads[ENEMY_NUM];
-    int enemy_index[ENEMY_NUM];
-    for (int i=0; i<ENEMY_NUM; i++) {
-        enemy_index[i] = i;
-        pthread_create(&enemy_threads[i], NULL, update_offline_enemy, &enemy_index[i]);
+    if (argc == 2) {
+        f_info.isOnline = atoi(argv[1]);
+        printf("gameID is set from command line args as %d\n", f_info.isOnline);
+    } else {
+        printf("you did not set gameID\n");
+        f_info.isOnline = ws_createNewGameID();
+        printf("received a new gameID from server: %d\n", f_info.isOnline);
+        printf("tell your friends the gameID so you can play together!\n");
     }
 
-    Player me = {0, {0, 0, 0}, 150, "me", 0, 0, DORAEMON};
+    // テスト用ダミー敵のための新規プロセスを生成
+    int child_id = 0;
+    for (int i=0; i<ENEMY_NUM; i++) {
+        if ((enemy_process[i] = fork()) == 0) {
+            child_id = i + 1;
+            break;
+        }
+    }
+    // 親プロセスがkillされたときに子もすべて殺すよう設定
+    if (child_id == 0) {
+        signal(SIGINT, kill_all_process);
+    }
+
+    // ここからが実際の処理
+    ws_init(f_info.isOnline, &f_info.elapsed_time);
+
+    Player me = {0, {0, 0, 0}, 150, "", 0, 0, DORAEMON};
+    {
+        char player_name[100];
+        sprintf(player_name, "player %c", 'A' + child_id);
+        strncpy(me.name, player_name, strlen(player_name));
+    }
     f_info.me = &me;
     tid = ws_createPlayer(f_info.me, &f_info.me->id);
     pthread_join(tid, NULL);
@@ -111,10 +105,13 @@ int main(void) {
         pthread_join(tid, NULL);
         sleep(1);
     }
-    for (int i=0; i<ENEMY_NUM; i++) {
-        pthread_kill(enemy_threads[i], 0);
+    ws_close(f_info.isOnline);
+    if (child_id == 0) {
+        for (int i=0; i<ENEMY_NUM; i++) {
+            waitpid(enemy_process[i], NULL, 0);
+            printf("process %d ended\n", i + 1);
+        }
     }
-    ws_close(0);
 
     return 0;
 }

@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <unistd.h>
 #include <sys/time.h>
 
 int *elapsed;
+Player dead;
 
 typedef struct {
     Player *list[ENEMY_NUM + 1];
@@ -186,4 +188,9 @@ void cp_loadEnemies_th(threadLoadEnemy *le) {
         usleep(- current_time.tv_sec * MICRO - (MICRO - current_time.tv_usec));
     }
     free(le);
+}
+
+void cp_dead_th(threatPlayer *tp) {
+    cp_sendPlayer_th(tp->p);
+    free(tp);
 }

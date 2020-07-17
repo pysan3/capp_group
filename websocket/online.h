@@ -25,3 +25,5 @@ Bullet *multi_getNewBullet(int player_id);
 Wall *multi_getNewWall(int player_id);
 
 void multi_loadEnemies_th(threadLoadEnemy *le);
+
+void multi_dead_th(threatPlayer *tp);

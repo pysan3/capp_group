@@ -23,3 +23,5 @@ Bullet *cp_getNewBullet(int player_id);
 Wall *cp_getNewWall(int player_id);
 
 void cp_loadEnemies_th(threadLoadEnemy *le);
+
+void cp_dead_th(threatPlayer *tp);

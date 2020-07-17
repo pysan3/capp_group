@@ -83,3 +83,34 @@ int wall2json(char *buf, char const *name, const char *dataname, const Wall *w) 
     json_Wall(tmp, dataname, w);
     return data_to_json(buf, name, tmp);
 }
+
+Coordinate *Coordinate_json(const json_t *json, Coordinate *c) {
+    c->x = json_getReal(json_getProperty(json, "x"));
+    c->y = json_getReal(json_getProperty(json, "y"));
+    c->z = json_getReal(json_getProperty(json, "z"));
+    return c;
+}
+
+Player *Player_json(const json_t *json, Player *p) {
+    Coordinate_json(json_getProperty(json, "location"), &p->location);
+    p->id = json_getInteger(json_getProperty(json, "id"));
+    p->hp = json_getInteger(json_getProperty(json, "hp"));
+    p->sleep_bullet = json_getInteger(json_getProperty(json, "sleep_bullet"));
+    p->sleep_wall = json_getInteger(json_getProperty(json, "sleep_wall"));
+    strcpy(p->name, json_getPropertyValue(json, "name"));
+    p->c = json_getInteger(json_getProperty(json, "Character"));
+    return p;
+}
+
+Bullet *Bullet_json(const json_t *json, Bullet *b) {
+    Coordinate_json(json_getProperty(json, "location"), &b->location);
+    Coordinate_json(json_getProperty(json, "velocity"), &b->velocity);
+    b->damage = json_getReal(json_getProperty(json, "damage"));
+    return b;
+}
+
+Wall *Wall_json(const json_t *json, Wall *w) {
+    Coordinate_json(json_getProperty(json, "location"), &w->location);
+    w->remain = json_getInteger(json_getProperty(json, "remain"));
+    return w;
+}

@@ -10,11 +10,8 @@
 int isOnline;
 
 int ws_createNewGameID(void) {
-    if (isOnline) return multi_createNewGameID();
-    else {
-        fprintf(stderr, "do not create new game ID on offline gamemode\n");
-        exit(1);
-    }
+    printf("websocket: connecting to server for new gameID\n");
+    return multi_createNewGameID();
 }
 
 int ws_init(int gameID, int *time) {
@@ -97,5 +94,14 @@ pthread_t ws_loadEnemies(int player_id, Player **e) {
     le->player_id = player_id;
     le->e = e;
     pthread_create(&tid, NULL, isOnline ? multi_loadEnemies_th : cp_loadEnemies_th, le);
+    return tid;
+}
+
+pthread_t ws_dead(int player_id) {
+    pthread_t tid;
+    threatPlayer *tp = (threatPlayer *)malloc(sizeof(threatPlayer));
+    *tp->id = player_id;
+    tp->p = NULL;
+    pthread_create(&tid, NULL, isOnline ? multi_dead_th : cp_dead_th, tp);
     return tid;
 }
