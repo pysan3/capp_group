@@ -47,7 +47,7 @@ target_link_libraries(object PRIVATE ${LIBRARIES})
 target_include_directories(object PRIVATE object/)
 target_include_directories(object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(main test_offline.c)
+add_executable(main main.c)
 target_link_libraries(main PRIVATE characters object websocket player)
 target_link_libraries(main PRIVATE ${LIBRARIES} pthread)
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
