@@ -77,62 +77,73 @@ int multi_close(int gameID) {
 	return 0;
 }
 
-pid_t multi_createPlayer(Player *p, int *id) {
-	pid_t pid;
-	if ((pid = fork()) == 0) {
-		char resp[1000], data[1000];
-		json_Player(data, "player", p);
-		int resp_len = data_to_json(resp, "createPlayer", data, NULL);
-		printf("createPlayer: %s\n", resp);
-		// libwsclient_send(client, resp);
-		if ((pid = fork()) == 0) {
-			while (arrivals.playerID == NULL) {
-				sleep(1);
-				arrivals.playerID = (int *)malloc(sizeof(int));
-				*arrivals.playerID = 5;
-			}
-			*id = *arrivals.playerID;
-			free(arrivals.playerID);
-			exit(0);
-		} else {
-			waitpid(pid, NULL, 0);
-			exit(0);
-		}
-	} else {
-		return pid;
-	}
+// pid_t multi_createPlayer(Player *p, int *id) {
+// 	pid_t pid;
+// 	if ((pid = fork()) == 0) {
+// 		char resp[1000], data[1000];
+// 		json_Player(data, "player", p);
+// 		int resp_len = data_to_json(resp, "createPlayer", data, NULL);
+// 		printf("createPlayer: %s\n", resp);
+// 		// libwsclient_send(client, resp);
+// 		if ((pid = fork()) == 0) {
+// 			while (arrivals.playerID == NULL) {
+// 				sleep(1);
+// 				arrivals.playerID = (int *)malloc(sizeof(int));
+// 				*arrivals.playerID = 5;
+// 			}
+// 			*id = *arrivals.playerID;
+// 			free(arrivals.playerID);
+// 			exit(0);
+// 		} else {
+// 			waitpid(pid, NULL, 0);
+// 			exit(0);
+// 		}
+// 	} else {
+// 		return pid;
+// 	}
+// }
+
+// pid_t multi_sendPlayer(Player *p) {
+// 	pid_t pid;
+// 	if ((pid = fork()) == 0) {
+// 		char resp[1000], data[1000];
+// 		json_Player(data, "player", p);
+// 		int resp_len = data_to_json(resp, "updatePlayer", data, NULL);
+// 		printf("sendPlayer: %s\n", resp);
+// 		// libwsclient_send(client, resp);
+// 		exit(0);
+// 	} else {
+// 		return pid;
+// 	}
+// }
+
+// pid_t multi_sendNewBullet(int player_id, Bullet *b) {
+// 	pid_t pid;
+// 	if ((pid = fork()) == 0) {
+// 		char resp[1000], data[1000], id[1000];
+// 		json_playerID(id, player_id);
+// 		json_Bullet(data, "bullet", b);
+// 		int resp_len = data_to_json(resp, "newBullet", id, data, NULL);
+// 		printf("newBullet: %s\n", resp);
+// 		// libwsclient_send(client, resp);
+// 		exit(0);
+// 	} else {
+// 		return pid;
+// 	}
+
+pthread_t multi_createPlayer(Player *p, int *id) {
+	return 1;
 }
 
-pid_t multi_sendPlayer(Player *p) {
-	pid_t pid;
-	if ((pid = fork()) == 0) {
-		char resp[1000], data[1000];
-		json_Player(data, "player", p);
-		int resp_len = data_to_json(resp, "updatePlayer", data, NULL);
-		printf("sendPlayer: %s\n", resp);
-		// libwsclient_send(client, resp);
-		exit(0);
-	} else {
-		return pid;
-	}
+pthread_t multi_sendPlayer(Player *p) {
+	return 0;
 }
 
-pid_t multi_sendNewBullet(int player_id, Bullet *b) {
-	pid_t pid;
-	if ((pid = fork()) == 0) {
-		char resp[1000], data[1000], id[1000];
-		json_playerID(id, player_id);
-		json_Bullet(data, "bullet", b);
-		int resp_len = data_to_json(resp, "newBullet", id, data, NULL);
-		printf("newBullet: %s\n", resp);
-		// libwsclient_send(client, resp);
-		exit(0);
-	} else {
-		return pid;
-	}
+pthread_t multi_sendNewBullet(int player_id, Bullet *b) {
+	return 0;
 }
 
-pid_t multi_sendNewWall(int player_id, Wall *w) {
+pthread_t multi_sendNewWall(int player_id, Wall *w) {
 	return 0;
 }
 
@@ -152,7 +163,7 @@ Wall *multi_getNewWall(int player_id) {
 	return NULL;
 }
 
-pid_t multi_loadEnemies(int player_id, Player *e[]) {
+pthread_t multi_loadEnemies(int player_id, Player *e[]) {
 	return 0;
 }
 
