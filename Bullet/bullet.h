@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-#include "../header.h"
-=======
 #pragma once
 
 #include "../header.h"
@@ -16,4 +13,3 @@ void bullet_next(void);
 
 //Bullet型を受け取り、球を生成、サーバーにも伝える
 void bullet_throw(Bullet* start);
->>>>>>> 92a75cb56bf5a3bef501b0037be25b93d9ff3813
