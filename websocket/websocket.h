@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../header.h"
+#include "typing4threads.h"
 #include <pthread.h>
 
 // ゲームIDを新規作成する場合に呼び出す

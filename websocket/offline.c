@@ -3,11 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <stdatomic.h>
-#include <pthread.h>
-#include <sys/types.h>
 #include <sys/time.h>
-#include <unistd.h>
 
 int *elapsed;
 
@@ -29,7 +25,33 @@ typedef struct {
     BulletNode *first, *last;
     pthread_mutex_t mut;
 } BulletList;
-BulletList bulletlist[ENEMY_NUM + 1];
+void cp_bullet_append(BulletList *list, Bullet *b) {
+    pthread_mutex_lock(&list->mut);
+    BulletNode *new = (BulletNode *)malloc(sizeof(BulletNode));
+    new->b = b;
+    new->created_at = *elapsed;
+    new->next = NULL;
+    list->last->next = new;
+    list->last = new;
+    if (list->first == NULL) list->first = new;
+    pthread_mutex_unlock(&list->mut);
+}
+Bullet *cp_bullet_pop_front(BulletList *list) {
+    if (list->first == NULL) {
+        return NULL;
+    }
+    pthread_mutex_lock(&list->mut);
+    BulletNode *new = list->first;
+    list->first = new->next;
+    if (new->next == NULL) list->last = NULL;
+    pthread_mutex_unlock(&list->mut);
+    Bullet *b = new->b;
+    b->location.x = b->velocity.x * (*elapsed - new->created_at);
+    b->location.y = b->velocity.y * (*elapsed - new->created_at);
+    b->location.z = b->velocity.z * (*elapsed - new->created_at);
+    free(new);
+    return b;
+}
 
 typedef struct _wall_node{
     Wall *w;
@@ -40,6 +62,33 @@ typedef struct {
     WallNode *first, *last;
     pthread_mutex_t mut;
 } WallList;
+void cp_wall_append(WallList *list, Wall *w) {
+    pthread_mutex_lock(&list->mut);
+    WallNode *new = (WallNode *)malloc(sizeof(WallNode));
+    new->w = w;
+    new->created_at = *elapsed;
+    new->next = NULL;
+    list->last->next = new;
+    list->last = new;
+    if (list->first == NULL) list->first = new;
+    pthread_mutex_unlock(&list->mut);
+}
+Wall *cp_wall_pop_front(WallList *list) {
+    if (list->first == NULL) {
+        return NULL;
+    }
+    pthread_mutex_lock(&list->mut);
+    WallNode *new = list->first;
+    list->first = new->next;
+    if (new->next == NULL) list->last = NULL;
+    pthread_mutex_unlock(&list->mut);
+    Wall *w = new->w;
+    w->remain -= *elapsed - new->created_at;
+    free(new);
+    return w;
+}
+
+BulletList bulletlist[ENEMY_NUM + 1];
 WallList walllist[ENEMY_NUM + 1];
 
 int cp_init(int gameID, int *time) {
@@ -61,10 +110,6 @@ int cp_close(int gameID) {
     return 0;
 }
 
-typedef struct {
-    Player *p;
-    int *id;
-} threatPlayer;
 void cp_createPlayer_th(threatPlayer *tp) {
     pthread_mutex_lock(&players.l_mut);
     *tp->id = players.length;
@@ -81,24 +126,11 @@ void cp_createPlayer_th(threatPlayer *tp) {
     printf("DEBUG: created player %s, id: %d\n", tp->p->name, *tp->id);
     free(tp);
 }
-pthread_t cp_createPlayer(Player *p, int *id) {
-    pthread_t tid;
-    threatPlayer *tp = (threatPlayer *)malloc(sizeof(threatPlayer));
-    tp->p = p;
-    tp->id = id;
-    pthread_create(&tid, NULL, cp_createPlayer_th, tp);
-    return tid;
-}
 
 void cp_sendPlayer_th(Player *p) {
     pthread_mutex_lock(&players.p_mut[p->id]);
     players.list[p->id] = p;
     pthread_mutex_unlock(&players.p_mut[p->id]);
-}
-pthread_t cp_sendPlayer(Player *p) {
-    pthread_t tid;
-    pthread_create(&tid, NULL, cp_sendPlayer_th, p);
-    return tid;
 }
 
 Player *cp_getEnemyInfo(int id) {
@@ -110,39 +142,6 @@ Player **cp_getAllEnemyInfo(int player_id) {
     return players.list;
 }
 
-void cp_bullet_append(BulletList *list, Bullet *b) {
-    pthread_mutex_lock(&list->mut);
-    BulletNode *new = (BulletNode *)malloc(sizeof(BulletNode));
-    new->b = b;
-    new->created_at = *elapsed;
-    new->next = NULL;
-    list->last->next = new;
-    list->last = new;
-    if (list->first == NULL) list->first = new;
-    pthread_mutex_unlock(&list->mut);
-}
-
-Bullet *cp_bullet_pop_front(BulletList *list) {
-    if (list->first == NULL) {
-        return NULL;
-    }
-    pthread_mutex_lock(&list->mut);
-    BulletNode *new = list->first;
-    list->first = new->next;
-    if (new->next == NULL) list->last = NULL;
-    pthread_mutex_unlock(&list->mut);
-    Bullet *b = new->b;
-    b->location.x = b->velocity.x * (*elapsed - new->created_at);
-    b->location.y = b->velocity.y * (*elapsed - new->created_at);
-    b->location.z = b->velocity.z * (*elapsed - new->created_at);
-    free(new);
-    return b;
-}
-
-typedef struct {
-    int player_id;
-    Bullet *b;
-} playersBullet;
 void cp_sendNewBullet_th(playersBullet *pb) {
     for (int i=0; i<players.length; i++) {
         if (i != pb->player_id) {
@@ -151,50 +150,11 @@ void cp_sendNewBullet_th(playersBullet *pb) {
     }
     free(pb);
 }
-pthread_t cp_sendNewBullet(int player_id, Bullet *b) {
-    pthread_t tid;
-    playersBullet *pb = (playersBullet *)malloc(sizeof(playersBullet));
-    pb->player_id = player_id;
-    pb->b = b;
-    pthread_create(&tid, NULL, cp_sendNewBullet_th, &pb);
-    return tid;
-}
 
 Bullet *cp_getNewBullet(int player_id) {
     return cp_bullet_pop_front(&bulletlist[player_id]);
 }
 
-void cp_wall_append(WallList *list, Wall *w) {
-    pthread_mutex_lock(&list->mut);
-    WallNode *new = (WallNode *)malloc(sizeof(WallNode));
-    new->w = w;
-    new->created_at = *elapsed;
-    new->next = NULL;
-    list->last->next = new;
-    list->last = new;
-    if (list->first == NULL) list->first = new;
-    pthread_mutex_unlock(&list->mut);
-}
-
-Wall *cp_wall_pop_front(WallList *list) {
-    if (list->first == NULL) {
-        return NULL;
-    }
-    pthread_mutex_lock(&list->mut);
-    WallNode *new = list->first;
-    list->first = new->next;
-    if (new->next == NULL) list->last = NULL;
-    pthread_mutex_unlock(&list->mut);
-    Wall *w = new->w;
-    w->remain -= *elapsed - new->created_at;
-    free(new);
-    return w;
-}
-
-typedef struct {
-    int player_id;
-    Wall *w;
-} playersWall;
 void cp_sendNewWall_th(playersWall *pw) {
     for (int i=0; i<players.length; i++) {
         if (i != pw->player_id) {
@@ -203,31 +163,13 @@ void cp_sendNewWall_th(playersWall *pw) {
     }
     free(pw);
 }
-pthread_t cp_sendNewWall(int player_id, Wall *w) {
-    pthread_t tid;
-    playersWall *pw = (playersWall *)malloc(sizeof(playersWall));
-    pw->player_id = player_id;
-    pw->w = w;
-    pthread_create(&tid, NULL, cp_sendNewWall_th, pw);
-    return tid;
-}
 
 Wall *cp_getNewWall(int player_id) {
     return cp_wall_pop_front(&walllist[player_id]);
 }
 
-#define MICRO 1000000
-typedef struct {
-    int player_id;
-    Player **e;
-} threadLoadEnemy;
 void cp_loadEnemies_th(threadLoadEnemy *le) {
-    while (1) {
-        if (players.length >= ENEMY_NUM + 1) {
-            break;
-        }
-        sleep(1);
-    }
+    while (players.length < ENEMY_NUM + 1) sleep(1);
     if (le->e != NULL) {
         for (int i=0; i<ENEMY_NUM; i++) {
             le->e[i] = players.list[i + (i >= le->player_id)];
@@ -244,12 +186,4 @@ void cp_loadEnemies_th(threadLoadEnemy *le) {
         usleep(- current_time.tv_sec * MICRO - (MICRO - current_time.tv_usec));
     }
     free(le);
-}
-pthread_t cp_loadEnemies(int player_id, Player **e) {
-    pthread_t tid;
-    threadLoadEnemy *le = (threadLoadEnemy *)malloc(sizeof(threadLoadEnemy));
-    le->player_id = player_id;
-    le->e = e;
-    pthread_create(&tid, NULL, cp_loadEnemies_th, le);
-    return tid;
 }
