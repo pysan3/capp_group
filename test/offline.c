@@ -1,7 +1,7 @@
-#include "header.h"
+#include "../header.h"
 
-#include "websocket/websocket.h"
-#include "Bullet/bullet.h"
+#include "../websocket/websocket.h"
+#include "../Bullet/bullet.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
