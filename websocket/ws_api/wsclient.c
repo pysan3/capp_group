@@ -184,7 +184,7 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 				*(ctl_frame->rawdata + 1) |= 0x80; //turn mask bit on
 				i = 0;
 				// change opcode to 0xA (Pong Frame)
-				*(ctl_frame->rawdata) = (*(ctl_frame->rawdata) & 0xf0) | 0xA;
+				*(ctl_frame->rawdata) = (*(ctl_frame->rawdata) & 0xf0) & 0xA;
 				pthread_mutex_lock(&c->send_lock);
 				while(i < ctl_frame->payload_offset + ctl_frame->payload_len && n >= 0) {
 					n = _libwsclient_write(c, ctl_frame->rawdata + i, ctl_frame->payload_offset + ctl_frame->payload_len - i);
