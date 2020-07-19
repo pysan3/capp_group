@@ -83,6 +83,10 @@ int main(void) {
             f_info.bullets[i]->location.y += f_info.bullets[i]->velocity.y;
             f_info.bullets[i]->location.z += f_info.bullets[i]->velocity.z;
         }
+        Bullet *b = (Bullet *)malloc(sizeof(Bullet));
+        b->player_id = f_info.me->id;
+        tid = ws_sendNewBullet(b->player_id, b);
+        pthread_join(tid, NULL);
         Coordinate v = {
             (rand() + 1.0) / (RAND_MAX + 2.0),
             0,
