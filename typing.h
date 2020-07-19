@@ -6,6 +6,7 @@ typedef struct {
     double x;
     double y;
     double z;
+    double rotate;
 } Coordinate;
 
 #define PLAYER_HEIGHT 10
@@ -26,6 +27,7 @@ typedef struct {
     Coordinate location;
     Coordinate velocity;
     double damage;
+    int player_id;
 } Bullet;
 
 #define WALL_HEIGHT 10
@@ -33,6 +35,7 @@ typedef struct {
 typedef struct {
     Coordinate location;
     int remain;
+    int player_id;
 } Wall;
 
 #define FIELD_MAX_X 100
