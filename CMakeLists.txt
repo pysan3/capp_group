@@ -60,7 +60,7 @@ target_include_directories(Bullet PRIVATE Bullet/)
 target_include_directories(Bullet PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 
-add_executable(main test/bullet_test.c)
+add_executable(main main.c)
 
 target_link_libraries(main PRIVATE characters object websocket player Wall Bullet)
 
