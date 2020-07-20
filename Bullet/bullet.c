@@ -83,6 +83,8 @@ void bullet_next(void){
     bullets[i]->location.x += bullets[i]->velocity.x;
     bullets[i]->location.y += bullets[i]->velocity.y;
     bullets[i]->location.z += bullets[i]->velocity.z;
+
+    draw_bullet(bullets[i]->location);
   }
   return 0;
 }
@@ -95,9 +97,14 @@ void bullet_throw(Bullet* start){
   return 0;
 }
 
-void update_bullets(void){
+void update_bullets(int player_id){
+  Bullet* new_bullet = NULL;
+  while((new_bullet = ws_getNewBullet(player_id)) != NULL){
+    bullets[bullet_sum] = new_bullet;
+    bullet_sum++;
+  }
 
+  bullet_next();
 
-
-
+  return 0;
 }
