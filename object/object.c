@@ -123,3 +123,4 @@ void draw_bullet(Coordinate *location){
     glutSolidSphere(0.10,30,15);
     glPopMatrix(); 
 }
+
