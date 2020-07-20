@@ -11,7 +11,6 @@ typedef struct {
 #define PLAYER_HEIGHT 10
 
 typedef struct {
-    int id;
     Coordinate location;
     int hp;
     char name[100];
@@ -39,10 +38,7 @@ typedef struct {
 #define FIELD_MAX_Y 100
 #define FIELD_MAX_Z 100
 
-#define ENEMY_NUM 1
-
 typedef struct {
     Player me;
-    Player enemies[ENEMY_NUM];
-    unsigned long long elapsed_time;
+    Player enemies[1];
 } FieldInfo;
