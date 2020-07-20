@@ -1,6 +1,5 @@
 #define _USE_MATH_DEFINES
 
-#include "../header.h"
 #include "characters.h"
 #include <stdlib.h>
 #include <math.h>
@@ -14,6 +13,23 @@ GLfloat blue[] = {0, 0, 1, 1};
 GLfloat white[] = {1, 1, 1, 1};
 GLfloat gray[] = {0.5, 0.5, 0.5, 1};
 GLfloat black[] = {0, 0, 0, 1};
+
+void print_axes(void) {
+    glPushMatrix();
+    glTranslatef(0, 0, 0);
+    glBegin(GL_LINES);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
+    glVertex3f(5, 0, 0);
+    glVertex3f(0, 0, 0);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
+    glVertex3f(0, 5, 0);
+    glVertex3f(0, 0, 0);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
+    glVertex3f(0, 0, 5);
+    glVertex3f(0, 0, 0);
+    glEnd();
+    glPopMatrix();
+}
 
 typedef struct {
     GLfloat x;
