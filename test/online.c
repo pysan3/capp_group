@@ -85,25 +85,26 @@ int main(int argc, char *argv[]) {
         f_info.me->location.x += v.x;
         f_info.me->location.y += v.y;
         f_info.me->location.z += v.z;
-        f_info.me->hp -= 5;
+        f_info.me->hp -= 1;
         tid = ws_sendPlayer(f_info.me);
-        {
-            int enemy_hp = 0;
-            for (int i=0; i<ENEMY_NUM; i++) {
-                enemy_hp += f_info.enemies[i]->hp > 0;
-            }
-            if (enemy_hp == 0) {
-                printf("you won\n");
-                break;
-            }
+
+        int enemy_hp = 0;
+        for (int i=0; i<ENEMY_NUM; i++) {
+            enemy_hp += f_info.enemies[i]->hp;
         }
+        if (enemy_hp == 0) {
+            printf("you won\n");
+            break;
+        }
+
         if (f_info.me->hp <= 0) {
-            printf("I'm dead\n");
+            pthread_join(tid, NULL);
+            printf("I'm dead, enemyhp: %d\n", enemy_hp);
             break;
         }
         f_info.elapsed_time += 1;
         pthread_join(tid, NULL);
-        sleep(1);
+        usleep(30000);
     }
     ws_close(f_info.isOnline);
     if (child_id == 0) {

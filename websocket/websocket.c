@@ -51,7 +51,7 @@ pthread_t ws_sendNewBullet(int player_id, Bullet *b) {
     playersBullet *pb = (playersBullet *)malloc(sizeof(playersBullet));
     pb->player_id = player_id;
     pb->b = b;
-    pthread_create(&tid, NULL, isOnline ? multi_sendNewBullet_th : cp_sendNewBullet_th, &pb);
+    pthread_create(&tid, NULL, isOnline ? multi_sendNewBullet_th : cp_sendNewBullet_th, pb);
     return tid;
 }
 

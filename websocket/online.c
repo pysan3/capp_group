@@ -10,7 +10,7 @@
 #include <sys/time.h>
 
 #ifndef MYSERVER
-	#define MYSERVER "ws://freeroomfinder.heroku.com/ws/cappgroup"
+	#define MYSERVER "ws://freeroomfinder.herokuapp.com/ws/cappgroup"
 #else
 	#define MYSERVER "ws://127.0.0.1:5042/ws/cappgroup"
 #endif
@@ -227,6 +227,7 @@ int multi_init(int id, int *time) {
 }
 
 int multi_close(int gameID) {
+	libwsclient_close(client);
 	libwsclient_finish(client);
 	return 0;
 }
@@ -237,11 +238,7 @@ void multi_createPlayer_th(threatPlayer *tp) {
 	int resp_len = data_to_json(resp, "createPlayer", data, NULL);
 	printf("createPlayer: %s\n", resp);
 	libwsclient_send(client, resp);
-	while (arrivals.playerID == NULL) {
-		sleep(1);
-		// arrivals.playerID = (int *)malloc(sizeof(int));
-		// *arrivals.playerID = 5;
-	}
+	while (arrivals.playerID == NULL) sleep(1);
 	*tp->id = *arrivals.playerID;
 	free(arrivals.playerID);
 	free(tp);
@@ -307,6 +304,7 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
 		free(arrivals.enemies);
 	}
 	arrivals.enemies = le->e;
+    free(le);
 	while (arrivals.start_from == NULL) sleep(1);
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
@@ -318,7 +316,6 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
     } else {
         usleep(- current_time.tv_sec * MICRO - (MICRO - current_time.tv_usec));
     }
-    free(le);
 }
 
 void multi_dead_th(threatPlayer *tp) {

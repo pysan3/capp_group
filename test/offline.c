@@ -86,7 +86,6 @@ int main(void) {
         Bullet *b = (Bullet *)malloc(sizeof(Bullet));
         b->player_id = f_info.me->id;
         tid = ws_sendNewBullet(b->player_id, b);
-        pthread_join(tid, NULL);
         Coordinate v = {
             (rand() + 1.0) / (RAND_MAX + 2.0),
             0,
