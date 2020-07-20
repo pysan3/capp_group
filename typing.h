@@ -34,6 +34,7 @@ typedef struct {
 
 typedef struct {
     Coordinate location;
+    Coordinate *corner[4];
     int remain;
     int player_id;
 } Wall;
