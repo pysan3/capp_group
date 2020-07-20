@@ -14,8 +14,8 @@ void wall_init(Wall** wall){
     return 0;
 }
 
-/*corner[4]={
-    {(walls->location.x+1)*cos(walls->location.rotate),
+Coordinate *corner[4]={
+    /*{(walls->location.x+1)*cos(walls->location.rotate),
     walls->location.y,
     (walls->location.z-3)*sin(walls->location.rotate),
     walls->location.rotate},//corner[0]
@@ -35,7 +35,7 @@ void wall_init(Wall** wall){
     (walls->location.z+3)*sin(walls->location.rotate),
     walls->location.rotate}//corner[3]
 
-    メモ
+    /*メモ
     corner[0]->x = (walls->location.x+1)*cos(walls->location.rotate)
     corner[1]->x = (walls->location.x-1)*cos(walls->location.rotate)
     corner[2]->x = (walls->location.x-1)*cos(walls->location.rotate)
@@ -43,8 +43,8 @@ void wall_init(Wall** wall){
     corner[0]->z = (walls->location.z-3)*sin(walls->location.rotate)
     corner[1]->z = (walls->location.z-3)*sin(walls->location.rotate)
     corner[2]->z = (walls->location.z+3)*sin(walls->location.rotate)
-    corner[3]->z = (walls->location.z+3)*sin(walls->location.rotate)
-};*/
+    corner[3]->z = (walls->location.z+3)*sin(walls->location.rotate)*/
+};
 
 
 void updata_wall(int player_id){
@@ -57,11 +57,22 @@ void updata_wall(int player_id){
     for(int i=0;i<wall_count;i++){
         walls[i]->remain = walls[i]->remain-1;
         if(walls[i]->remain<=0) free(walls[i]);
-        bullet_hit(walls[i]->corner[4]);
+        wall_corner(i);
+        bullet_hit(corner[4]);
         draw_wall(walls[i]->location);
     }
 }
 
+void wall_corner(int i){
+    corner[0]->x = (walls[i]->location.x+1)*cos(walls[i]->location.rotate);
+    corner[1]->x = (walls[i]->location.x-1)*cos(walls[i]->location.rotate);
+    corner[2]->x = (walls[i]->location.x-1)*cos(walls[i]->location.rotate);
+    corner[3]->x = (walls[i]->location.x+1)*cos(walls[i]->location.rotate);
+    corner[0]->z = (walls[i]->location.z-3)*sin(walls[i]->location.rotate);
+    corner[1]->z = (walls[i]->location.z-3)*sin(walls[i]->location.rotate);
+    corner[2]->z = (walls[i]->location.z+3)*sin(walls[i]->location.rotate);
+    corner[3]->z = (walls[i]->location.z+3)*sin(walls[i]->location.rotate); 
+}
 
 void wall_make(Wall* start){
     ws_sendNewWall(start->player_id, start);
