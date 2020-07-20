@@ -8,6 +8,12 @@ void draw_character(Character c) {
         case LOTSO:
             draw_LOTSO();
             break;
+        case KATANA:
+            draw_KATANA();
+            break;
+        case RILAKKUMA:
+            draw_Rilakkuma();
+            break;
         // case ここ:
         //     draw_ここ();
         //     break;
