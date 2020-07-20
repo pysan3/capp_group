@@ -54,7 +54,7 @@ void draw_ground(void){
 		v[3][2] = 0;
 		if ((i^j) & 1)
 		{
-			glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[GRAY]);
+			glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
 			glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLACK]);
 			glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
 			glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
@@ -94,21 +94,21 @@ void draw_snowman(Coordinate *location){
     glTranslatef(0.7*sin(70*PI/180)*sin(30*PI/180),-0.7*cos(70*PI/180),0.7*sin(70*PI/180)*cos(30*PI/180));
     glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[ORANGE]);
     glTranslatef(0,-1.5,0);
-    glRotatef(-45,1,0,0);
-    glTranslatef(0,2.2*cos(45*PI/180),-0.8*cos(45*PI/180));
+    glRotatef(180,1,0,0);
+    glTranslatef(0,-1.7,0.5);
     glutSolidCone(0.25,0.5,30,30);
-    glTranslatef(0,-2.2*cos(45*PI/180),0.8*cos(45*PI/180));
-    glRotatef(45,1,0,0);
+    glTranslatef(0,1.7,-0.5);
+    glRotatef(-180,1,0,0);
     glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[BROWN]);
     glTranslatef(0,0.2,0);
     glRotatef(45,0,0,1);
-    for(int i=0;i<150;i++){
+    for(int i=0;i<15;i++){
         glTranslatef(0,0.1,0);
         glutSolidCube(0.1);
     }
-    glTranslatef(0,-15,0);
+    glTranslatef(0,-1.5,0);
     glRotatef(90,0,0,-1);
-    for(int j=0;j<150;j++){
+    for(int j=0;j<15;j++){
         glTranslatef(0,0.1,0);
         glutSolidCube(0.1);
     }
@@ -120,7 +120,7 @@ void draw_bullet(Coordinate *location){
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
     glTranslatef(location->x,location->y,location->z);
-    glutSolidSphere(0.10,30,15);
+    glutSolidSphere(0.30,30,15);
     glPopMatrix(); 
 }
 
