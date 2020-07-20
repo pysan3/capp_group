@@ -1,6 +1,8 @@
 #pragma once
 
 #include "bullet.h"
+#include "../object/object.h"
+#include "../websocket/websocket.h"
 #include <stdio.h>
 #include <math.h>
 
