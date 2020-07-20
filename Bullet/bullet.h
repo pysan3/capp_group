@@ -2,14 +2,17 @@
 
 #include "../header.h"
 
+//FieldInfoのbulletのポインタの値をもってくる
+void bullet_init(Bullet **bullet);
+
 //長方形の上下にいる場合
-int ishit_ud(double a, double b, double h, double w);
+int ishit_ud(double a, double b, double r, double h, double w);
 
 //長方形の左右にいる場合
-int ishit_rl(double a, double b, double h, double w);
+int ishit_rl(double a, double b, double r, double h, double w);
 
 //長方形の斜めの位置にいる場合
-int ishit_dig(double a, double b, double h, double w);
+int ishit_dig(double a, double b, double r, double h, double w);
 
 //引数として物体の4隅の位置を受け取り受けたダメージの合計を返す、当たった玉は消去
 //左上、右上、右下、左下の順に並べてポインターを渡して

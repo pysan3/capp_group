@@ -1,5 +1,3 @@
-#pragma once
-
 #include "bullet.h"
 #include "../object/object.h"
 #include "../websocket/websocket.h"
@@ -11,22 +9,21 @@ Bullet **bullets = NULL;  //Bulletの配列のポインタ
 
 void bullet_init(Bullet **b){
   bullets = b; 
-  return 0;
 }
 
-int ishit_ud(double a, double b, double h, double w){
+int ishit_ud(double a, double b, double r, double h, double w){
   if((0 < a && a < w) && (h-r < b && b < r))
     return 1;
   else return 0;
 }
 
-int ishit_rl(double a, double b, double h, double w){
+int ishit_rl(double a, double b, double r, double h, double w){
   if((-r < a && a < w+r) && (h < b && b < 0))
     return 1;
   else return 0;
 }
 
-int ishit_dig(double a, double b, double h, double w){
+int ishit_dig(double a, double b, double r, double h, double w){
   if(( a*a + (h-b)*(h-b) < r*r ) || ( w-a + (h-b)*(h-b) < r*r )
      || ( a*a + b*b < r*r ) || ( (w-a)*(w-a) + b*b < r*r ))
     return 1;
@@ -69,9 +66,9 @@ double bullet_hit(Coordinate* corner[4]){
     a = a*cos - b*sin;
     b = a*sin + b*cos;    //原点を中心に回転移動
 
-    if(ishit_ud( a, b, h, w) || ishit_rl( a, b, h, w) || ishit_dig( a, b, h, w)){
+    if(ishit_ud( a, b, r, h, w) || ishit_rl( a, b, r, h, w) || ishit_dig( a, b, r, h, w)){
       damage += bullets[i]->damage;
-      free(bullets[i]);
+      //free(bullets[i]);
       bullets[i] = NULL;
     }
   }
@@ -86,17 +83,15 @@ void bullet_next(void){
     bullets[i]->location.y += bullets[i]->velocity.y;
     bullets[i]->location.z += bullets[i]->velocity.z;
 
-    draw_bullet(bullets[i]->location);
+    //draw_bullet(bullets[i]->location);
   }
-  return 0;
 }
 
 
 void bullet_throw(Bullet* start){
-  ws_sendNewBullet(start->player_id, start);
+  //ws_sendNewBullet(start->player_id, start);
   bullets[bullet_sum] = start;
   bullet_sum++;
-  return 0;
 }
 
 void update_bullets(int player_id){
@@ -107,6 +102,4 @@ void update_bullets(int player_id){
   }
 
   bullet_next();
-
-  return 0;
 }
