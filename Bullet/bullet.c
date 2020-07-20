@@ -4,21 +4,26 @@
 #include <stdio.h>
 #include <math.h>
 
-//長方形の上下にいる場合
+int bullet_sum = 0;
+Bullet **bullets = NULL;  //Bulletの配列のポインタ
+
+void bullet_init(Bullet **b){
+  bullets = b; 
+  return 0;
+}
+
 int ishit_ud(double a, double b, double h, double w){
   if((0 < a && a < w) && (h-r < b && b < r))
     return 1;
   else return 0;
 }
 
-//長方形の左右にいる場合
 int ishit_rl(double a, double b, double h, double w){
   if((-r < a && a < w+r) && (h < b && b < 0))
     return 1;
   else return 0;
 }
 
-//長方形の斜めの位置にいる場合
 int ishit_dig(double a, double b, double h, double w){
   if(( a*a + (h-b)*(h-b) < r*r ) || ( w-a + (h-b)*(h-b) < r*r )
      || ( a*a + b*b < r*r ) || ( (w-a)*(w-a) + b*b < r*r ))
@@ -26,7 +31,7 @@ int ishit_dig(double a, double b, double h, double w){
   else return 0;
 }
 
-void bullet_hit(Coordinate* corner[4]){
+double bullet_hit(Coordinate* corner[4]){
   double damage = 0;
   
   double x1 = corner[0]->x;
@@ -42,10 +47,10 @@ void bullet_hit(Coordinate* corner[4]){
   double a,b,r,h,w,cos,sin; //玉のx座標y座標、半径、長方形の高さと幅
   r = BULLET_RADIUS;
   
-  for(i=0; i<1000; i++){
-    if(fieldinfo.bullets[i] == NULL) continue;
-    a = fieldinfo.bullets[i]->location.x;
-    b = fieldinfo.bullets[i]->location.z;
+  for(i=0; i<bullet_sum; i++){
+    if(bullets[i] == NULL) continue;
+    a = bullets[i]->location.x;
+    b = bullets[i]->location.z;
     //x4,z4を原点に合わせるように移動
     x1 = x1-z4;  z1 = z1-z4;
     x2 = x2-z4;  z2 = z2-z4;
@@ -63,9 +68,9 @@ void bullet_hit(Coordinate* corner[4]){
     b = a*sin + b*cos;    //原点を中心に回転移動
 
     if(ishit_ud( a, b, h, w) || ishit_rl( a, b, h, w) || ishit_dig( a, b, h, w)){
-      damage += fieldinfo.bullets[i]->damage;
-      free(fieldinfo.bullets[i]);
-      fieldinfo.bullets[i] = NULL;
+      damage += bullets[i]->damage;
+      free(bullets[i]);
+      bullets[i] = NULL;
     }
   }
   return damage;
@@ -73,11 +78,26 @@ void bullet_hit(Coordinate* corner[4]){
 
 void bullet_next(void){
   int i;
-  for( i=0; i<1000; i++){
-    
-
+  for( i=0; i < bullet_sum; i++){
+    if(bullets[i]==NULL) continue;
+    bullets[i]->location.x += bullets[i]->velocity.x;
+    bullets[i]->location.y += bullets[i]->velocity.y;
+    bullets[i]->location.z += bullets[i]->velocity.z;
   }
+  return 0;
+}
+
+
+void bullet_throw(Bullet* start){
+  ws_sendNewBullet(start->player_id, start);
+  bullets[bullet_sum] = start;
+  bullet_sum++;
+  return 0;
+}
+
+void update_bullets(void){
+
+
 
 
 }
-
