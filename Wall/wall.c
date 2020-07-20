@@ -15,11 +15,27 @@ void wall_init(Wall** wall){
 }
 
 /*corner[4]={
-    {(walls->location.x+1)*cos(walls->location.rotate),walls->location.y,(walls->location.z-3)*sin(walls->location.rotate),walls->location.rotate},
-    {(walls->location.x-1)*cos(walls->location.rotate),walls->location.y,(walls->location.z-3)*sin(walls->location.rotate),walls->location.rotate},
-    {(walls->location.x-1)*cos(walls->location.rotate),walls->location.y,(walls->location.z+3)*sin(walls->location.rotate),walls->location.rotate},
-    {(walls->location.x+1)*cos(walls->location.rotate),walls->location.y,(walls->location.z+3)*sin(walls->location.rotate),walls->location.rotate}
+    {(walls->location.x+1)*cos(walls->location.rotate),
+    walls->location.y,
+    (walls->location.z-3)*sin(walls->location.rotate),
+    walls->location.rotate},//corner[0]
 
+    {(walls->location.x-1)*cos(walls->location.rotate),
+    walls->location.y,
+    (walls->location.z-3)*sin(walls->location.rotate),
+    walls->location.rotate},//corner[1]
+
+    {(walls->location.x-1)*cos(walls->location.rotate),
+    walls->location.y,
+    (walls->location.z+3)*sin(walls->location.rotate),
+    walls->location.rotate},//corner[2]
+
+    {(walls->location.x+1)*cos(walls->location.rotate),
+    walls->location.y,
+    (walls->location.z+3)*sin(walls->location.rotate),
+    walls->location.rotate}//corner[3]
+
+    メモ
     corner[0]->x = (walls->location.x+1)*cos(walls->location.rotate)
     corner[1]->x = (walls->location.x-1)*cos(walls->location.rotate)
     corner[2]->x = (walls->location.x-1)*cos(walls->location.rotate)
