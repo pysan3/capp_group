@@ -83,6 +83,8 @@ void draw_snowman(Coordinate *location){
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
     glTranslatef(location->x,location->y,location->z);
+	glRotatef(location->rotate,0,1,0);
+	glTranslatef(0,1,0);
     glutSolidSphere(1.0,30,30);
     glTranslatef(0,1.5,0);
     glutSolidSphere(0.7,30,30);
@@ -124,3 +126,46 @@ void draw_bullet(Coordinate *location){
     glPopMatrix(); 
 }
 
+
+void draw_wall(Coordinate *location){
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[GRAY]);
+    glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
+    glPushMatrix();
+	glTranslatef(location->x,location->y,location->z);
+	glRotatef(location->rotate,0,1,0);
+	glTranslatef(-1.5,0,0);
+	for(int i=1;i<30;i++){
+		for(int j=1;j<=40;j++){
+			glutSolidCube(0.1);
+			glTranslatef(0,0.1,0);
+		}
+		glTranslatef(0.1,-4,0);
+	}
+	glPopMatrix();
+}
+
+
+void put_character(Character c,Coordinate *location){
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
+    glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
+    glPushMatrix();
+	glTranslatef(location->x,location->y,location->z);
+	glRotatef(location->rotate,0,1,0);
+	if(c==DORAEMON){
+		glRotatef(-90,1,0,0);
+		glRotatef(-90,0,0,1);
+		glTranslatef(0,0,1.5);
+		glScalef(0.8,0.8,0.8);
+	}else if(c==LOTSO){
+		glTranslatef(0,2.2,0);
+		glScalef(0.55,0.55,0.55);
+	}else if(c==KATANA){
+		glTranslatef(0,0.5,0);
+	}else if(c==RILAKKUMA){
+		glTranslatef(0,1.8,1);
+		glScalef(0.3,0.3,0.3);
+	}
+	draw_character(c);
+
+	glPopMatrix();
+}

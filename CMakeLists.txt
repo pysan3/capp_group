@@ -43,7 +43,7 @@ target_include_directories(characters PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 FILE(GLOB object_files object/*.c)
 add_library(object SHARED ${object_files})
-target_link_libraries(object PRIVATE ${LIBRARIES})
+target_link_libraries(object PRIVATE ${LIBRARIES} characters)
 target_include_directories(object PRIVATE object/)
 target_include_directories(object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -53,7 +53,7 @@ target_link_libraries(Wall PRIVATE ${LIBRARIES})
 target_include_directories(Wall PRIVATE Wall/)
 target_include_directories(Wall PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(main main.c)
+add_executable(main objecttest.c)
 
 target_link_libraries(main PRIVATE characters object websocket player Wall)
 

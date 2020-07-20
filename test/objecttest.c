@@ -34,12 +34,12 @@ void display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // 回転するにはここのコメントを外す
-    glRotatef(0.5, 0, 0, 1);
+    glRotatef(0.5, 0, 1, 0);
 
     // ここにdoraemonを追加した
     // draw_character(DORAEMON);
     Coordinate try = {0,0,0};
-    draw_ground();
+    put_character(LOTSO,&try);
     print_axes();
     // 描画盤面を入れ替える
     glutSwapBuffers();
@@ -73,7 +73,7 @@ void init(void) {
     gluPerspective(45.0, 1, 1.0, 100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(7, 3, 2, 0, 0, 0, 0, 0, 1);
+    gluLookAt(7, 3, 2, 0, 0, 0, 0, 1.0, 0);
 }
 
 int main(int argc, char *argv[]) {
@@ -87,4 +87,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
