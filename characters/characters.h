@@ -1,19 +1,13 @@
 #pragma once
 
-#include "../header.h"
-
-void draw_doraemon(void);
-
 typedef enum {
     DORAEMON,
+    LOTSO,
+    // ここ
 } Character;
 
-void draw_character(Character c) {
-    switch (c) {
-        case DORAEMON:
-            draw_doraemon();
-            break;
-        default:
-            break;
-    }
-}
+void draw_doraemon(void);
+void draw_LOTSO(void);
+// ここに追加
+
+void draw_character(Character c);
