@@ -68,7 +68,7 @@ double bullet_hit(Coordinate* corner[4]){
 
     if(ishit_ud( a, b, r, h, w) || ishit_rl( a, b, r, h, w) || ishit_dig( a, b, r, h, w)){
       damage += bullets[i]->damage;
-      //free(bullets[i]);
+      free(bullets[i]);
       bullets[i] = NULL;
     }
   }
@@ -83,13 +83,13 @@ void bullet_next(void){
     bullets[i]->location.y += bullets[i]->velocity.y;
     bullets[i]->location.z += bullets[i]->velocity.z;
 
-    //draw_bullet(bullets[i]->location);
+    draw_bullet(&bullets[i]->location);
   }
 }
 
 
 void bullet_throw(Bullet* start){
-  //ws_sendNewBullet(start->player_id, start);
+  ws_sendNewBullet(start->player_id, start);
   bullets[bullet_sum] = start;
   bullet_sum++;
 }
