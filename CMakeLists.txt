@@ -43,7 +43,7 @@ target_include_directories(characters PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 FILE(GLOB object_files object/*.c)
 add_library(object SHARED ${object_files})
-target_link_libraries(object PRIVATE ${LIBRARIES})
+target_link_libraries(object PRIVATE ${LIBRARIES} characters)
 target_include_directories(object PRIVATE object/)
 target_include_directories(object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
