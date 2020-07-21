@@ -194,6 +194,7 @@ void cp_loadEnemies_th(threadLoadEnemy *le) {
     }
     free(le);
 }
+
 void cp_dead_th(threatPlayer *tp) {
     cp_sendPlayer_th(tp->p);
     free(tp);
