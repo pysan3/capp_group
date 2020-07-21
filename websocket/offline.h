@@ -6,13 +6,13 @@ int cp_init(int gameID, int *time);
 
 int cp_close(int gameID);
 
-pthread_t cp_createPlayer(Player *p, int *id);
+void cp_createPlayer_th(threatPlayer *tp);
 
-pthread_t cp_sendPlayer(Player *p);
+void cp_sendPlayer_th(Player *p);
 
-pthread_t cp_sendNewBullet(int player_id, Bullet *b);
+void cp_sendNewBullet_th(playersBullet *pb);
 
-pthread_t cp_sendNewWall(int player_id, Wall *w);
+void cp_sendNewWall_th(playersWall *pw);
 
 Player *cp_getEnemyInfo(int id);
 
@@ -22,4 +22,6 @@ Bullet *cp_getNewBullet(int player_id);
 
 Wall *cp_getNewWall(int player_id);
 
-pthread_t cp_loadEnemies(int player_id, Player *e[]);
+void cp_loadEnemies_th(threadLoadEnemy *le);
+
+void cp_dead_th(threatPlayer *tp);

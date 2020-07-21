@@ -147,6 +147,7 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 	mask_int = rand();
 	memcpy(mask, &mask_int, 4);
 	pthread_mutex_lock(&c->lock);
+
 	switch(ctl_frame->opcode) {
 		case 0x8:
 			//close frame
@@ -173,6 +174,38 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 				}
 			}
 			c->flags |= CLIENT_SHOULD_CLOSE;
+			break;
+		case 0x9:
+			// Received ping frame
+			if((c->flags & CLIENT_SHOULD_CLOSE) == 0) {
+				// set mask
+				memcpy(ctl_frame->rawdata + ctl_frame->payload_offset, mask, 4);
+				ctl_frame->payload_offset += 4;
+				// Server sent ping.  Send pong frame as acknowledgement.
+				for(i=0;i<ctl_frame->payload_len;i++)
+					*(ctl_frame->rawdata + ctl_frame->payload_offset + i) ^= (mask[i % 4] & 0xff); //mask payload
+				*(ctl_frame->rawdata + 1) |= 0x80; //turn mask bit on
+				i = 0;
+				// change opcode to 0xA (Pong Frame)
+				*(ctl_frame->rawdata) = (*(ctl_frame->rawdata) & 0xf0) | 0xA;
+				pthread_mutex_lock(&c->send_lock);
+				while(i < (ctl_frame->payload_offset + ctl_frame->payload_len) && n >= 0) {
+					n = _libwsclient_write(c, ctl_frame->rawdata + i, ctl_frame->payload_offset + ctl_frame->payload_len - i);
+					i += n;
+				}
+				pthread_mutex_unlock(&c->send_lock);
+				if(n < 0) {
+					if(c->onerror) {
+						err = libwsclient_new_error(WS_HANDLE_CTL_FRAME_SEND_ERR);
+						err->extra_code = n;
+						c->onerror(c, err);
+						free(err);
+						err = NULL;
+					}
+				}
+			}
+			break;
+		case 0xA:
 			break;
 		default:
 			fprintf(stderr, "Unhandled control frame received.  Opcode: %d\n", ctl_frame->opcode);
@@ -210,7 +243,7 @@ inline void libwsclient_in_data(wsclient *c, char in) {
 	pthread_mutex_unlock(&c->lock);
 	if(libwsclient_complete_frame(c, current) == 1) {
 		if(current->fin == 1) {
-			//is control frame
+			// is control frame
 			if((current->opcode & 0x08) == 0x08) {
 				libwsclient_handle_control_frame(c, current);
 			} else {

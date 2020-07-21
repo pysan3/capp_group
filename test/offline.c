@@ -37,12 +37,13 @@ void update_offline_enemy(int *index) {
             hitSpace[i].z = ((i & 1) * 2 - 1) * depth;
         }
         // e.hp -= bullet_hit(&hitSpace);
-        e.hp -= 3;
+        e.hp -= 10;
         sleep(1);
         // printf("%d %d %s %d %d\n", e.id, e.hp, e.name, e.sleep_bullet, e.sleep_wall);
         ws_sendPlayer(&e);
         if (e.hp <= 0) {
             printf("%s (id: %d) is dead\n", e.name, e.id);
+            ws_dead(e.id);
             break;
         }
     }
@@ -82,6 +83,9 @@ int main(void) {
             f_info.bullets[i]->location.y += f_info.bullets[i]->velocity.y;
             f_info.bullets[i]->location.z += f_info.bullets[i]->velocity.z;
         }
+        Bullet *b = (Bullet *)malloc(sizeof(Bullet));
+        b->player_id = f_info.me->id;
+        tid = ws_sendNewBullet(b->player_id, b);
         Coordinate v = {
             (rand() + 1.0) / (RAND_MAX + 2.0),
             0,
