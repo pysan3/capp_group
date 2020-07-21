@@ -1,8 +1,8 @@
 #include "../header.h"
 
 //生成済みのwallの更新
-void updata_wall(void);
-//n秒後に自動消滅
-void wall_disappear(int remain);
+void updata_wall(int player_id);
 //wallの作成
-void wall_make(Wall **wall);
+void wall_make(Wall* start);
+//Wall構造体のアドレスを取得
+void wal_init(Wall** wall);
