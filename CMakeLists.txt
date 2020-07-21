@@ -26,12 +26,15 @@ if (APPLE)
 else()
     target_link_libraries(ws_api PRIVATE pthread ssl)
 endif()
+=======
+target_link_libraries(ws_api PRIVATE pthread ssl)
 target_compile_options(ws_api PRIVATE -Wno-format-truncation)
 FILE(GLOB websocket_files websocket/*.c)
 add_library(websocket SHARED ${websocket_files})
 target_include_directories(websocket PRIVATE websocket/)
 target_link_libraries(websocket PRIVATE ws_api)
 target_compile_options(websocket PRIVATE -Wno-incompatible-pointer-types)
+# target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
 
 FILE(GLOB characters_files characters/*.c)
 add_library(characters SHARED ${characters_files})
@@ -41,7 +44,7 @@ target_include_directories(characters PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 FILE(GLOB object_files object/*.c)
 add_library(object SHARED ${object_files})
-target_link_libraries(object PRIVATE ${LIBRARIES})
+target_link_libraries(object PRIVATE ${LIBRARIES} characters)
 target_include_directories(object PRIVATE object/)
 target_include_directories(object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -51,6 +54,12 @@ target_link_libraries(Wall PRIVATE ${LIBRARIES})
 target_include_directories(Wall PRIVATE Wall/)
 target_include_directories(Wall PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
+FILE(GLOB Bullet_files Bullet/*.c)
+add_library(Bullet SHARED ${Bullet_files})
+target_link_libraries(Bullet PRIVATE ${LIBRARIES} websocket)
+target_include_directories(Bullet PRIVATE Bullet/)
+target_include_directories(Bullet PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
 # player (yoshie)
 FILE(GLOB player_files Player/*.c)
 add_library(player SHARED ${player_files})
@@ -59,10 +68,8 @@ target_include_directories(player PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(player PRIVATE websocket Wall object)
 target_link_libraries(player PRIVATE ${LIBRARIES})
 
-
 add_executable(main main.c)
-
-target_link_libraries(main PRIVATE characters object websocket player Wall)
+target_link_libraries(main PRIVATE characters object websocket player Wall Bullet)
 
 target_link_libraries(main PRIVATE ${LIBRARIES})
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

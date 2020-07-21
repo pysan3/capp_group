@@ -17,6 +17,7 @@
 #ifndef __APPLE__
 #define HAVE_LIBSSL 1
 #endif
+
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
 #define HAVE_MALLOC 1

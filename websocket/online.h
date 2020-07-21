@@ -8,13 +8,13 @@ int multi_init(int gameID, int *time);
 
 int multi_close(int gameID);
 
-pthread_t multi_createPlayer(Player *p, int *id);
+void multi_createPlayer_th(threatPlayer *tp);
 
-pthread_t multi_sendPlayer(Player *p);
+void multi_sendPlayer_th(Player *p);
 
-pthread_t multi_sendNewBullet(int player_id, Bullet *b);
+void multi_sendNewBullet_th(playersBullet *pb);
 
-pthread_t multi_sendNewWall(int player_id, Wall *w);
+void multi_sendNewWall_th(playersWall *pw);
 
 Player *multi_getEnemyInfo(int id);
 
@@ -24,4 +24,6 @@ Bullet *multi_getNewBullet(int player_id);
 
 Wall *multi_getNewWall(int player_id);
 
-pthread_t multi_loadEnemies(int player_id, Player *e[]);
+void multi_loadEnemies_th(threadLoadEnemy *le);
+
+void multi_dead_th(threatPlayer *tp);
