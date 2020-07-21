@@ -27,6 +27,7 @@ typedef struct {
     BulletNode *first, *last;
     pthread_mutex_t mut;
 } BulletList;
+
 void cp_bullet_append(BulletList *list, Bullet *b) {
     pthread_mutex_lock(&list->mut);
     BulletNode *new = (BulletNode *)malloc(sizeof(BulletNode));
@@ -38,6 +39,7 @@ void cp_bullet_append(BulletList *list, Bullet *b) {
     if (list->first == NULL) list->first = new;
     pthread_mutex_unlock(&list->mut);
 }
+
 Bullet *cp_bullet_pop_front(BulletList *list) {
     if (list->first == NULL) {
         return NULL;
@@ -64,6 +66,7 @@ typedef struct {
     WallNode *first, *last;
     pthread_mutex_t mut;
 } WallList;
+
 void cp_wall_append(WallList *list, Wall *w) {
     pthread_mutex_lock(&list->mut);
     WallNode *new = (WallNode *)malloc(sizeof(WallNode));
@@ -75,6 +78,7 @@ void cp_wall_append(WallList *list, Wall *w) {
     if (list->first == NULL) list->first = new;
     pthread_mutex_unlock(&list->mut);
 }
+
 Wall *cp_wall_pop_front(WallList *list) {
     if (list->first == NULL) {
         return NULL;

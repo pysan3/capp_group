@@ -75,6 +75,7 @@ void multi_wall_append(WallList *list, Wall *w) {
     if (list->first == NULL) list->first = new;
     pthread_mutex_unlock(&list->mut);
 }
+
 Wall *multi_wall_pop_front(WallList *list) {
     if (list->first == NULL) {
         return NULL;
