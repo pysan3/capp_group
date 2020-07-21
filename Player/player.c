@@ -15,7 +15,7 @@ FieldInfo *fieldinfo;
 
 void player_fieldget(FieldInfo *field){
 	fieldinfo=field;
-	//printf("get");
+	printf("get");
 }
 
 void player_move(int value)//プレイヤーの移動
@@ -41,7 +41,7 @@ void player_move(int value)//プレイヤーの移動
 	if (mySpecialValue2)glutTimerFunc(50, player_move, 0);
 	if (mySpecialValue3)glutTimerFunc(50, player_move, 0);
 	if (mySpecialValue4)glutTimerFunc(50, player_move, 0);
-	//printf("(%lf,%lf,%lf,%lf)\n",fieldinfo->me->location.x,fieldinfo->me->location.y,fieldinfo->me->location.z,fieldinfo->me->location.rotate);
+	printf("(%lf,%lf,%lf,%lf)\n",fieldinfo->me->location.x,fieldinfo->me->location.y,fieldinfo->me->location.z,fieldinfo->me->location.rotate);
 }
 
 void mySpecialFunc(unsigned char key,int x,int y)//特殊キーが押された時
@@ -109,8 +109,8 @@ void myKeyboardFunc(unsigned char key,int x,int y)
 void player_make_shield(Player *player){
 	Coordinate location=player->location;
 	Wall wall={location,10,3,player->id};//新しく壁を生成
-//	wall_make(&wall);//壁側に投げる
-//	printf("shield\n");
+	wall_make(&wall);//壁側に投げる
+	printf("shield\n");
     player->sleep_wall=0;//再び作れるようにする
 }
 
@@ -128,8 +128,8 @@ void player_make_bullet(int x,int y){
 	Coordinate location = fieldinfo->me->location;
 	Coordinate velocity = {x,10,y,fieldinfo->me->location.rotate};
 	Bullet bullet = {location,velocity,0,fieldinfo->me->id};//弾の生成
-//	printf("bullet(%d,%d)\n",x,y);
-//	bullet_throw(&bullet);//弾側に投げる
+	printf("bullet(%d,%d)\n",x,y);
+	bullet_throw(&bullet);//弾側に投げる
 	fieldinfo->me->sleep_bullet=0;
 }
 
@@ -141,7 +141,7 @@ void player_enemy_bullet(){
 	Coordinate location = fieldinfo->enemies[0]->location;
 	Coordinate velocity = {fieldinfo->me->location.x,fieldinfo->me->location.y,fieldinfo->me->location.z,fieldinfo->enemies[0]->location.rotate};
 	Bullet bullet = {location,velocity,0,fieldinfo->enemies[0]->id};//弾の生成
-	//bullet_throw(&bullet);//弾側に投げる
+	bullet_throw(&bullet);//弾側に投げる
 	fieldinfo->me->sleep_bullet=0;
 }
 
@@ -173,8 +173,8 @@ void player_enemy_move(){
 			player_enemy_bullet();
 			break;
 	}
-//	printf("%d\n",num);
-//	printf("(%lf,%lf,%lf,%lf)\n",fieldinfo->enemies[0]->location.x,fieldinfo->enemies[0]->location.y,fieldinfo->enemies[0]->location.z,fieldinfo->enemies[0]->location.rotate);
+	printf("%d\n",num);
+	printf("(%lf,%lf,%lf,%lf)\n",fieldinfo->enemies[0]->location.x,fieldinfo->enemies[0]->location.y,fieldinfo->enemies[0]->location.z,fieldinfo->enemies[0]->location.rotate);
 }
 
 void player_cannon(){
@@ -183,13 +183,13 @@ void player_cannon(){
 		Coordinate location = fieldinfo->cannon[0]->location;
 		Coordinate velocity = fieldinfo->enemies[0]->location;
 		Bullet bullet = {location,velocity,0,fieldinfo->me->id};//弾の生成
-		//bullet_throw(&bullet);//弾側に投げる
+		bullet_throw(&bullet);//弾側に投げる
 		printf("makebullet1");
 	}else if(num==2){
 		Coordinate location = fieldinfo->cannon[1]->location;
 		Coordinate velocity = fieldinfo->me->location;
 		Bullet bullet = {location,velocity,0,fieldinfo->enemies[0]->id};//弾の生成
-		//bullet_throw(&bullet);//弾側に投げる
+		bullet_throw(&bullet);//弾側に投げる
 		printf("makebullet2");
 	}
 	printf("%d\n",num);
@@ -197,23 +197,24 @@ void player_cannon(){
 
 void update_player(){
 	player_enemy_move();//敵を動かす
-//	put_character(fieldinfo->enemies[0]->c,fieldinfo->enemies[0]->location);//敵の描画
-//	player_hp(bullet_hit(&(fieldinfo->me->location)),fieldinfo->me);
+	put_character(fieldinfo->enemies[0]->c,&(fieldinfo->enemies[0]->location));//敵の描画
+	player_hp(bullet_hit(&(fieldinfo->me->location)),fieldinfo->me);
 	int i=0;
-//	for(i=0;i<2;i++){
-//		draw_snowman(fieldinfo->cannon[i]->location);
-//	}
+	for(i=0;i<2;i++){
+		draw_snowman(&(fieldinfo->cannon[i]->location));
+	}
 	ws_sendPlayer(fieldinfo->me);
-//	put_character(fieldinfo->me->c,fieldinfo->me->location);
-//	if(fieldinfo->isOnline==0){
-//		if(fieldinfo->me->hp<=0){
-//			ws_dead(fieldinfo->me->id);
-//		}else if(fieldinfo->enemies[0]->hp<=0){
-//			ws_dead(fieldinfo->enemies[0]->id);
-//		}
-//	}else{
-//		ws_close();
-//	}
+	put_character(fieldinfo->me->c,&(fieldinfo->me->location));
+	if(fieldinfo->isOnline==0){
+		if(fieldinfo->me->hp<=0){
+			ws_dead(fieldinfo->me->id);
+		}else if(fieldinfo->enemies[0]->hp<=0){
+			ws_dead(fieldinfo->enemies[0]->id);
+		}
+	}else{
+		ws_close(fieldinfo->me->id);
+		ws_close(fieldinfo->enemies[0]->id);
+	}
 
 }
 
