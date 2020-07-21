@@ -10,11 +10,8 @@
 int isOnline;
 
 int ws_createNewGameID(void) {
-    if (isOnline) return multi_createNewGameID();
-    else {
-        fprintf(stderr, "do not create new game ID on offline gamemode\n");
-        exit(1);
-    }
+    printf("websocket: connecting to server for new gameID\n");
+    return multi_createNewGameID();
 }
 
 int ws_init(int gameID, int *time) {
@@ -35,27 +32,36 @@ int ws_close(int gameID) {
 }
 
 pthread_t ws_createPlayer(Player *p, int *id) {
-    return isOnline
-    ? multi_createPlayer(p, id)
-    : cp_createPlayer(p, id);
+    pthread_t tid;
+    threatPlayer *tp = (threatPlayer *)malloc(sizeof(threatPlayer));
+    tp->p = p;
+    tp->id = id;
+    pthread_create(&tid, NULL, isOnline ? multi_createPlayer_th : cp_createPlayer_th, tp);
+    return tid;
 }
 
 pthread_t ws_sendPlayer(Player *p) {
-    return isOnline
-    ? multi_sendPlayer(p)
-    : cp_sendPlayer(p);
+    pthread_t tid;
+    pthread_create(&tid, NULL, isOnline ? multi_sendPlayer_th : cp_sendPlayer_th, p);
+    return tid;
 }
 
 pthread_t ws_sendNewBullet(int player_id, Bullet *b) {
-    return isOnline
-    ? multi_sendNewBullet(player_id, b)
-    : cp_sendNewBullet(player_id, b);
+    pthread_t tid;
+    playersBullet *pb = (playersBullet *)malloc(sizeof(playersBullet));
+    pb->player_id = player_id;
+    pb->b = b;
+    pthread_create(&tid, NULL, isOnline ? multi_sendNewBullet_th : cp_sendNewBullet_th, pb);
+    return tid;
 }
 
 pthread_t ws_sendNewWall(int player_id, Wall *w) {
-    return isOnline
-    ? multi_sendNewWall(player_id, w)
-    : cp_sendNewWall(player_id, w);
+    pthread_t tid;
+    playersWall *pw = (playersWall *)malloc(sizeof(playersWall));
+    pw->player_id = player_id;
+    pw->w = w;
+    pthread_create(&tid, NULL, isOnline ? multi_sendNewWall_th : cp_sendNewWall_th, pw);
+    return tid;
 }
 
 Player *ws_getEnemyInfo(int id) {
@@ -82,8 +88,20 @@ Wall *ws_getNewWall(int player_id) {
     : cp_getNewWall(player_id);
 }
 
-pthread_t ws_loadEnemies(int player_id, Player *e[]) {
-    return isOnline
-    ? multi_loadEnemies(player_id, e)
-    : cp_loadEnemies(player_id, e);
+pthread_t ws_loadEnemies(int player_id, Player **e) {
+    pthread_t tid;
+    threadLoadEnemy *le = (threadLoadEnemy *)malloc(sizeof(threadLoadEnemy));
+    le->player_id = player_id;
+    le->e = e;
+    pthread_create(&tid, NULL, isOnline ? multi_loadEnemies_th : cp_loadEnemies_th, le);
+    return tid;
+}
+
+pthread_t ws_dead(int player_id) {
+    pthread_t tid;
+    threatPlayer *tp = (threatPlayer *)malloc(sizeof(threatPlayer));
+    *tp->id = player_id;
+    tp->p = NULL;
+    pthread_create(&tid, NULL, isOnline ? multi_dead_th : cp_dead_th, tp);
+    return tid;
 }

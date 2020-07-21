@@ -34,6 +34,7 @@ add_library(websocket SHARED ${websocket_files})
 target_include_directories(websocket PRIVATE websocket/)
 target_link_libraries(websocket PRIVATE ws_api)
 target_compile_options(websocket PRIVATE -Wno-incompatible-pointer-types)
+# target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
 
 FILE(GLOB characters_files characters/*.c)
 add_library(characters SHARED ${characters_files})
@@ -61,9 +62,7 @@ target_include_directories(Bullet PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 add_executable(main main.c)
-
 target_link_libraries(main PRIVATE characters object websocket player Wall Bullet)
 
 target_link_libraries(main PRIVATE ${LIBRARIES})
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-# target_compile_options(main PRIVATE -pthread)

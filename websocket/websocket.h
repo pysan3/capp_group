@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../header.h"
+#include "typing4threads.h"
 #include <pthread.h>
 
 // ゲームIDを新規作成する場合に呼び出す
@@ -72,3 +72,9 @@ Wall *ws_getNewWall(int player_id);
 // オンラインの場合、敵が窓に参加した通知がサーバから届いた場合に配列に追加する
 // 引数:e:敵を格納する配列
 pthread_t ws_loadEnemies(int player_id, Player *e[]);
+
+// 自分が死んだ場合に呼ぶ関数
+// この関数実行後にサーバにリクエストを投げるとバグる可能性あり
+// 引数: player_id
+// 戻り値: サーバへリクエストを投げるスレッドid
+pthread_t ws_dead(int player_id);
