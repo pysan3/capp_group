@@ -26,7 +26,6 @@ if (APPLE)
 else()
     target_link_libraries(ws_api PRIVATE pthread ssl)
 endif()
-=======
 target_link_libraries(ws_api PRIVATE pthread ssl)
 target_compile_options(ws_api PRIVATE -Wno-format-truncation)
 FILE(GLOB websocket_files websocket/*.c)
