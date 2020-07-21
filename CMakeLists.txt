@@ -36,7 +36,7 @@ FILE(GLOB characterchange_files characterchange/*.c)
 add_library(characterchange SHARED ${characterchange_files})
 target_link_libraries(characterchange PRIVATE ${LIBRARIES})
 target_include_directories(characterchange PRIVATE characterchange/)
-target_include_directories(characterchange PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})/
+target_include_directories(characterchange PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 FILE(GLOB object_files object/*.c)
 add_library(object SHARED ${object_files})

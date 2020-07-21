@@ -22,6 +22,9 @@ double bullet_hit(Coordinate* corner[4]);
 //次のフレームでの玉の位置を計算、描画
 void bullet_next(void);
 
+// 与えられたBulletの1フレーム先の座標を計算
+void bullet_calcNext(Bullet *b);
+
 //Bullet型を受け取り、玉を生成、サーバーにも伝える
 void bullet_throw(Bullet* start);
 

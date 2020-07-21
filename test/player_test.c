@@ -72,8 +72,7 @@ void init(void) {
     glMaterialf(GL_FRONT, GL_SHININESS, 80);
 
     glutKeyboardFunc(myKeyboardFunc);
-	glutSpecialFunc(mySpecialFunc);
-	glutSpecialUpFunc(mySpecialUpFunc);
+	glutKeyboardUpFunc(myKeyboardUpFunc);
 	glutMouseFunc(myMouseFunc);
 
     glMatrixMode(GL_PROJECTION);

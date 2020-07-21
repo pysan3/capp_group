@@ -8,7 +8,7 @@ int bullet_sum = 0;
 Bullet **bullets = NULL;  //Bulletの配列のポインタ
 
 void bullet_init(Bullet **b){
-  bullets = b; 
+  bullets = b;
 }
 
 int ishit_ud(double a, double b, double r, double h, double w){
@@ -32,7 +32,7 @@ int ishit_dig(double a, double b, double r, double h, double w){
 
 double bullet_hit(Coordinate* corner[4]){
   double damage = 0;
-  
+
   double x1 = corner[0]->x;
   double x2 = corner[1]->x;
   double x3 = corner[2]->x;
@@ -45,7 +45,7 @@ double bullet_hit(Coordinate* corner[4]){
   int i;
   double a,b,r,h,w,cos,sin; //玉のx座標y座標、半径、長方形の高さと幅
   r = BULLET_RADIUS;
-  
+
   for(i=0; i<bullet_sum; i++){
     if(bullets[i] == NULL) continue;
     a = bullets[i]->location.x;
@@ -75,14 +75,17 @@ double bullet_hit(Coordinate* corner[4]){
   return damage;
 }
 
+void bullet_calcNext(Bullet *b) {
+    b->location.x += b->velocity.x;
+    b->location.y += b->velocity.y;
+    b->location.z += b->velocity.z;
+}
+
 void bullet_next(void){
   int i;
   for( i=0; i < bullet_sum; i++){
     if(bullets[i]==NULL) continue;
-    bullets[i]->location.x += bullets[i]->velocity.x;
-    bullets[i]->location.y += bullets[i]->velocity.y;
-    bullets[i]->location.z += bullets[i]->velocity.z;
-
+    bullet_calcNext(bullets[i]);
     draw_bullet(&bullets[i]->location);
   }
 }

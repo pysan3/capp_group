@@ -1,6 +1,7 @@
 #include "charcaterchange.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void cc_makeme(FieldInfo *f_info){
     char myname[100];

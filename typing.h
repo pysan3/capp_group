@@ -22,6 +22,8 @@ typedef struct {
 } Player;
 
 #define BULLET_RADIUS 1
+#define BULLET_SPEED 10
+#define BULLET_DAMAGE 30
 
 typedef struct {
     Coordinate location;
@@ -41,6 +43,8 @@ typedef struct {
 #define FIELD_MAX_X 100
 #define FIELD_MAX_Y 100
 #define FIELD_MAX_Z 100
+
+#define FPS 30.0
 
 #define ENEMY_NUM 1
 

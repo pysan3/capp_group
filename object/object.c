@@ -123,7 +123,7 @@ void draw_bullet(Coordinate *location){
     glPushMatrix();
     glTranslatef(location->x,location->y,location->z);
     glutSolidSphere(0.30,30,15);
-    glPopMatrix(); 
+    glPopMatrix();
 }
 
 
