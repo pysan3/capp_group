@@ -7,12 +7,12 @@
 
 enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK };
 GLfloat color[][4] = {
-		{ 1.0, 1.0, 1.0, 1.0 },
-		{ 0.5, 0.4, 0.35, 1.0 },
-		{ 0.99, 0.6, 0.4, 1.0 },
-		{ 0.8, 0.8, 0.8, 1.0 },
-		{ 0.0, 0.0, 0.0, 1.0 } };
-
+	{ 1.0, 1.0, 1.0, 1.0 },
+	{ 0.5, 0.4, 0.35, 1.0 },
+	{ 0.99, 0.6, 0.4, 1.0 },
+	{ 0.8, 0.8, 0.8, 1.0 },
+	{ 0.0, 0.0, 0.0, 1.0 }
+};
 
 void calcNormal(GLdouble v0[3], GLdouble v1[3], GLdouble v2[3], GLdouble n[3])
 {
@@ -36,6 +36,7 @@ void calcNormal(GLdouble v0[3], GLdouble v1[3], GLdouble v2[3], GLdouble n[3])
 void draw_ground(void){
     int i, j;
 	glPushMatrix();
+	// glScalef(FIELD_MAX_X, FIELD_MAX_Y, FIELD_MAX_Z);
 	for (i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
 		{
@@ -147,24 +148,11 @@ void draw_wall(Coordinate *location){
 
 void put_character(Character c,Coordinate *location){
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
-    glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
+    glMaterialf(GL_FRONT, GL_SHININESS, 80);
     glPushMatrix();
 	glTranslatef(location->x,location->y,location->z);
 	glRotatef(location->rotate,0,1,0);
-	if(c==DORAEMON){
-		glRotatef(-90,1,0,0);
-		glRotatef(-90,0,0,1);
-		glTranslatef(0,0,1.5);
-		glScalef(0.8,0.8,0.8);
-	}else if(c==LOTSO){
-		glTranslatef(0,2.2,0);
-		glScalef(0.55,0.55,0.55);
-	}else if(c==KATANA){
-		glTranslatef(0,0.5,0);
-	}else if(c==RILAKKUMA){
-		glTranslatef(0,1.8,1);
-		glScalef(0.3,0.3,0.3);
-	}
+	glScalef(PLAYER_HEIGHT, PLAYER_HEIGHT, PLAYER_HEIGHT);
 	draw_character(c);
 
 	glPopMatrix();
