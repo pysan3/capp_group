@@ -184,13 +184,13 @@ void cp_loadEnemies_th(threadLoadEnemy *le) {
     }
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
-    current_time.tv_sec -= players.start_from.tv_sec;
-    current_time.tv_usec -= players.start_from.tv_usec;
-    if (current_time.tv_sec * MICRO + MICRO - current_time.tv_usec > 0) {
+    long time_wait = (players.start_from.tv_sec - current_time.tv_sec) * MICRO + (players.start_from.tv_usec - current_time.tv_usec);
+    printf("%s-wait: %ld\n", players.list[le->player_id]->name, time_wait);
+    if (time_wait < 0) {
         fprintf(stderr, "not good connection with the server\n");
         exit(EXIT_FAILURE);
     } else {
-        usleep(- current_time.tv_sec * MICRO - (MICRO - current_time.tv_usec));
+        usleep(time_wait);
     }
     free(le);
 }

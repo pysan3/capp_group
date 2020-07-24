@@ -311,11 +311,12 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
     gettimeofday(&current_time, NULL);
     current_time.tv_sec -= arrivals.start_from->tv_sec;
     current_time.tv_usec -= arrivals.start_from->tv_usec;
-    if (current_time.tv_sec * MICRO + current_time.tv_usec > 0) {
+	long time_wait = (arrivals.start_from->tv_sec - current_time.tv_sec) * MICRO + (arrivals.start_from->tv_usec - current_time.tv_usec);
+    if (time_wait < 0) {
         fprintf(stderr, "not good connection with the server\n");
         exit(EXIT_FAILURE);
     } else {
-        usleep(- current_time.tv_sec * MICRO - current_time.tv_usec);
+        usleep(time_wait);
     }
 }
 

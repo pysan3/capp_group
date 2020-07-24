@@ -16,9 +16,6 @@ int ws_createNewGameID(void) {
 }
 
 int ws_init(int gameID, int *time, int *updated) {
-    if (gameID != 0) {
-        fprintf(stderr, "online functions are not created yet\n");
-    }
     isOnline = gameID;
     isUpdated = updated;
     return isOnline
