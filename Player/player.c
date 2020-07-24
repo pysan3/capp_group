@@ -115,7 +115,7 @@ void copyCoordinate(Coordinate *a, Coordinate *b) {
 }
 
 void player_make_shield(Player *player, double rotate){
-	if (player->sleep_wall > 0) return;
+	if (player->sleep_wall > fieldinfo->elapsed_time) return;
 	Wall *newWall = (Wall *)malloc(sizeof(Wall));
 	copyCoordinate(&newWall->location, &player->location);
 	// TODO: 自分から少し離す
@@ -125,7 +125,7 @@ void player_make_shield(Player *player, double rotate){
 	newWall->player_id = player->id;
 	wall_make(newWall);//壁側に投げる
 	printf("shield\n");
-    player->sleep_wall=3 * FPS;//再び作れるようにする
+    player->sleep_wall = fieldinfo->elapsed_time + 3 * FPS;//再び作れるようにする
 }
 
 void myMouseFunc(int button,int state,int x,int y){//とりあえずタップ
@@ -137,7 +137,7 @@ void myMouseFunc(int button,int state,int x,int y){//とりあえずタップ
 }
 
 void player_make_bullet(Player *p, Coordinate *direction){
-	if (p->sleep_bullet > 0) return;
+	if (p->sleep_bullet > fieldinfo->elapsed_time) return;
 	double dist = distance(direction->x, direction->z);
 	Coordinate newDirection = {
 		direction->x / dist * BULLET_SPEED,
@@ -154,7 +154,7 @@ void player_make_bullet(Player *p, Coordinate *direction){
 	newBullet->damage = BULLET_DAMAGE;
 	printf("bullet(%lf,%lf,%lf)\n",newBullet->location.x,newBullet->location.y,newBullet->location.z);
 	bullet_throw(newBullet);//弾側に投げる
-	p->sleep_bullet=0.5 * FPS;
+	p->sleep_bullet = fieldinfo->elapsed_time + 0.5 * FPS;
 }
 
 void player_hp(double hp,Player *player){//指定された分hpを減らす
