@@ -9,7 +9,7 @@ typedef struct {
     double rotate;
 } Coordinate;
 
-#define PLAYER_HEIGHT 10
+#define PLAYER_HEIGHT 4
 
 typedef struct {
     int id;
@@ -40,7 +40,7 @@ typedef struct {
     int player_id;
 } Wall;
 
-#define FIELD_MAX_X 100
+#define FIELD_MAX_X 118
 #define FIELD_MAX_Y 100
 #define FIELD_MAX_Z 100
 
@@ -55,5 +55,6 @@ typedef struct {
     Bullet *bullets[1000];
     Wall *walls[1000];
     int elapsed_time;
+    int isUpdated;
     int isOnline;
 } FieldInfo;
