@@ -40,14 +40,10 @@ int main(void){
 			   {5,4,2,0},
 			   {4,4,0,0},
 			   {0,4,2,0} };
-  Coordinate* c[4];
-  for(i=0;i<4;i++){
-    c[i]=&corner[i];
-  }
   printBullet(f_info.bullets);
   bullet_next();
   printBullet(f_info.bullets);
-  double x = bullet_hit(c);
+  double x = bullet_hit(corner);
   printf("damage %lf\n", x);
   printBullet(f_info.bullets);
   Bullet new = (Bullet){{3,2,5,0},{0,0,-1,0},2,0};

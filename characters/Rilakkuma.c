@@ -246,7 +246,7 @@ void ktarm(void) {
 void draw_Rilakkuma(void)
 {
 	glPushMatrix();
-	glTranslatef(0,1.8,1);
+	glTranslatef(1,1.8,0);
 	glScalef(0.3,0.3,0.3);
     glRotatef(90, 0, 1, 0);
 	kthead();

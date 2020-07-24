@@ -17,7 +17,7 @@ int ishit_dig(double a, double b, double r, double h, double w);
 //引数として物体の4隅の位置を受け取り受けたダメージの合計を返す、当たった玉は消去
 //左上、右上、右下、左下の順に並べてポインターを渡して
 //長方形でお願いします
-double bullet_hit(Coordinate* corner[4]);
+double bullet_hit(Coordinate corner[4]);
 
 //次のフレームでの玉の位置を計算、描画
 void bullet_next(void);

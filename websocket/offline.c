@@ -30,12 +30,12 @@ typedef struct {
 } BulletList;
 
 void cp_bullet_append(BulletList *list, Bullet *b) {
-    pthread_mutex_lock(&list->mut);
     BulletNode *new = (BulletNode *)malloc(sizeof(BulletNode));
     new->b = b;
     new->created_at = *elapsed;
     new->next = NULL;
-    list->last->next = new;
+    pthread_mutex_lock(&list->mut);
+    if (list->last != NULL) list->last->next = new;
     list->last = new;
     if (list->first == NULL) list->first = new;
     pthread_mutex_unlock(&list->mut);
@@ -51,9 +51,9 @@ Bullet *cp_bullet_pop_front(BulletList *list) {
     if (new->next == NULL) list->last = NULL;
     pthread_mutex_unlock(&list->mut);
     Bullet *b = new->b;
-    b->location.x = b->velocity.x * (*elapsed - new->created_at);
-    b->location.y = b->velocity.y * (*elapsed - new->created_at);
-    b->location.z = b->velocity.z * (*elapsed - new->created_at);
+    b->location.x += b->velocity.x * (*elapsed - new->created_at);
+    b->location.y += b->velocity.y * (*elapsed - new->created_at);
+    b->location.z += b->velocity.z * (*elapsed - new->created_at);
     free(new);
     return b;
 }
@@ -69,12 +69,12 @@ typedef struct {
 } WallList;
 
 void cp_wall_append(WallList *list, Wall *w) {
-    pthread_mutex_lock(&list->mut);
     WallNode *new = (WallNode *)malloc(sizeof(WallNode));
     new->w = w;
     new->created_at = *elapsed;
     new->next = NULL;
-    list->last->next = new;
+    pthread_mutex_lock(&list->mut);
+    if (list->last != NULL) list->last->next = new;
     list->last = new;
     if (list->first == NULL) list->first = new;
     pthread_mutex_unlock(&list->mut);

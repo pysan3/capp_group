@@ -4,7 +4,7 @@
 #include <math.h>
 
 #ifndef M_PI
-	#define M_PI 3.141592
+	#define M_PI 3.14159265358979323846
 #endif
 
 enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK };
@@ -124,8 +124,8 @@ void draw_bullet(Coordinate *location){
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
-    glTranslatef(location->x,location->y,location->z);
-    glutSolidSphere(0.30,30,15);
+    glTranslatef(location->x,2,location->z);
+    glutSolidSphere(BULLET_RADIUS,30,15);
     glPopMatrix();
 }
 
@@ -136,13 +136,13 @@ void draw_wall(Coordinate *location){
     glPushMatrix();
 	glTranslatef(location->x,location->y,location->z);
 	glRotatef(location->rotate * 180 / M_PI,0,1,0);
-	glTranslatef(-1.5,0,0);
-	for(int i=1;i<30;i++){
-		for(int j=1;j<=40;j++){
-			glutSolidCube(0.1);
-			glTranslatef(0,0.1,0);
+	glTranslatef(-2, 2, 0);
+	for(int i=0;i<WALL_HEIGHT/4;i++){
+		for(int j=0;j<2;j++){
+			glutSolidCube(4);
+			glTranslatef(4,0,0);
 		}
-		glTranslatef(0.1,-4,0);
+		glTranslatef(-8, 4, 0);
 	}
 	glPopMatrix();
 }

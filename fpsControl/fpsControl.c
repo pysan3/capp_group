@@ -28,9 +28,13 @@ void fps_init(int *elapsed_time, int *isUpdated) {
 int fps_elapsed(void) {
     gettimeofday(&fps_info->current_time, NULL);
     time_t elapsed_micro = (fps_info->current_time.tv_sec - fps_info->start_time.tv_sec) * MICRO + (fps_info->current_time.tv_usec - fps_info->start_time.tv_usec);
-    double elapsed_frames = elapsed_micro * FPS / MICRO;
-    if (*fps_info->isUpdated = *fps_info->elapsed_time != elapsed_frames) {
+    int elapsed_frames = elapsed_micro * FPS / MICRO;
+    if (*fps_info->isUpdated = elapsed_frames - *fps_info->elapsed_time) {
         *fps_info->elapsed_time = elapsed_frames;
+        if (*fps_info->isUpdated != 1)
+        printf("fps: %lf\n", FPS / *fps_info->isUpdated);
+    } else {
+        usleep(MICRO / FPS / 2);
     }
     return *fps_info->isUpdated;
 }

@@ -7,6 +7,8 @@ if (APPLE)
 endif()
 
 link_libraries(m)
+add_compile_options(-g)
+
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 
@@ -30,7 +32,7 @@ add_library(websocket SHARED ${websocket_files})
 target_include_directories(websocket PRIVATE websocket/)
 target_link_libraries(websocket PRIVATE ws_api)
 target_compile_options(websocket PRIVATE -Wno-incompatible-pointer-types)
-# target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
+target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
 
 FILE(GLOB characterchange_files characterchange/*.c)
 add_library(characterchange SHARED ${characterchange_files})
@@ -81,7 +83,8 @@ target_link_libraries(texture PRIVATE ${LIBRARIES} pthread)
 target_include_directories(texture PRIVATE texture20/)
 target_include_directories(texture PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(main test.c)
+add_executable(main takuto.c)
 target_link_libraries(main PRIVATE characters texture fps object websocket player Wall Bullet characterchange)
 target_link_libraries(main PRIVATE ${LIBRARIES} pthread)
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_options(main PRIVATE -Wno-incompatible-pointer-types)

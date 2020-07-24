@@ -20,7 +20,7 @@ void rectangle(double w, double h, const float l[])
   //   {  w,  h, 0.0 },
   //   { -w,  h, 0.0 }
   // };
-  
+
   /* 頂点のテクスチャ座標 */
   static const GLdouble texcoord[4][2] = {
     { 0.0, 0.0 }, { 1.0, 0.0 }, { 1.0, 1.0 }, { 0.0, 1.0 }
@@ -30,7 +30,7 @@ void rectangle(double w, double h, const float l[])
   double lt[4] = { l[0], l[1], l[2], l[3] };
   /* モデルビュー変換行列の逆行列 */
   double m[16];
-  
+
   /* 現在のモデルビュー変換行列の逆行列を求める */
   glGetDoublev(GL_MODELVIEW_MATRIX, m);
   inverse(m, m);
@@ -44,14 +44,14 @@ void rectangle(double w, double h, const float l[])
     lt[1] /= lt[3];
     lt[2] /= lt[3];
   }
-  
+
   /* 矩形を描く */
   glBegin(GL_QUADS);
-  
+
   for (int i = 0; i < 4; ++i) {
     /* 法線マップのテクスチャ座標を設定する */
     glTexCoord2dv(texcoord[i]);
-    
+
     /* 接空間における光源の方向ベクトルを
        正規化マップのテクスチャ座標に設定する */
     if (lt[3] != 0.0) {
@@ -63,7 +63,7 @@ void rectangle(double w, double h, const float l[])
     else {
       glMultiTexCoord3d(GL_TEXTURE1, lt[0], lt[1], lt[2]);
     }
-    
+
     /* 対応する頂点座標の指定 */
     glVertex3dv(vertex[i]);
   }

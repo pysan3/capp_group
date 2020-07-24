@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #ifndef M_PI
@@ -18,7 +19,19 @@ FieldInfo *fieldinfo;
 
 void player_fieldget(FieldInfo *field){
 	fieldinfo=field;
-	printf("get");
+}
+
+void player_init(Player *p, double x, double z, char name[], Character c) {
+    p->id = 0;
+    p->location.x = x;
+    p->location.y = 0;
+    p->location.z = z;
+    p->location.rotate = 0;
+    p->hp = 100;
+    strcpy(p->name, name);
+    p->sleep_bullet = 0;
+    p->sleep_wall = 0;
+    p->c = c;
 }
 
 double distance(double a, double b) {
@@ -27,37 +40,38 @@ double distance(double a, double b) {
 
 void player_to(Player *p, int x, int z) {
 	double dist = distance(x, z);
-	p->location.x += x * dist;
-	p->location.z += z * dist;
+	if (x) p->location.x += x / dist * fieldinfo->isUpdated;
+	if (z) p->location.z += z / dist * fieldinfo->isUpdated;
 	if (p->location.x < 0) p->location.x = 0;
 	if (p->location.z < 0) p->location.z = 0;
 	if (p->location.x > FIELD_MAX_X) p->location.x = FIELD_MAX_X;
 	if (p->location.z > FIELD_MAX_Z) p->location.z = FIELD_MAX_Z;
+	if (!(x | z)) return;
 	int angle = 0;
 	if (x + z < 0) angle += 4;
 	angle += -abs(x) + abs(z) + 1;
 	if (x + z == 0) angle += 4 + 2 * x;
-	p->location.rotate = M_PI * angle / 4;
+	p->location.rotate = -M_PI * angle / 4;
 }
 
 void player_move(int value)//プレイヤーの移動
 {
 	int x = 0, z = 0;
-	if (mySpecialValue == 1 << 0){//右
+	if (mySpecialValue & 1 << 0){//右
 		x = 1;
 	}
-	if (mySpecialValue == 1 << 1){//上
+	if (mySpecialValue & 1 << 1){//上
 		z = -1;
 	}
-	if (mySpecialValue == 1 << 2){//左
+	if (mySpecialValue & 1 << 2){//左
 		x = -1;
 	}
-	if (mySpecialValue == 1 << 3){//下
+	if (mySpecialValue & 1 << 3){//下
 		z = 1;
 	}
 	player_to(fieldinfo->me, x, z);
 
-	printf("(%lf,%lf,%lf,%lf)\n",fieldinfo->me->location.x,fieldinfo->me->location.y,fieldinfo->me->location.z,fieldinfo->me->location.rotate);
+	printf("player move: (%lf,%lf,%lf,%lf)\n",fieldinfo->me->location.x,fieldinfo->me->location.y,fieldinfo->me->location.z,fieldinfo->me->location.rotate);
 	if (mySpecialValue)glutTimerFunc(1000 / FPS, player_move, 0);
 }
 
@@ -119,9 +133,10 @@ void player_make_shield(Player *player, double rotate){
 	Wall *newWall = (Wall *)malloc(sizeof(Wall));
 	copyCoordinate(&newWall->location, &player->location);
 	// TODO: 自分から少し離す
-	newWall->location.x += 5 * sin(rotate);
-	newWall->location.z += 5 * cos(rotate);
-	newWall->remain = 3 * FPS;
+	newWall->location.x += 8 * cos(rotate);
+	newWall->location.z -= 8 * sin(rotate);
+	newWall->location.rotate += M_PI / 2;
+	newWall->remain = 1 * FPS;
 	newWall->player_id = player->id;
 	wall_make(newWall);//壁側に投げる
 	printf("shield\n");
@@ -138,21 +153,21 @@ void myMouseFunc(int button,int state,int x,int y){//とりあえずタップ
 
 void player_make_bullet(Player *p, Coordinate *direction){
 	if (p->sleep_bullet > fieldinfo->elapsed_time) return;
-	double dist = distance(direction->x, direction->z);
+	double dist = distance(direction->x - p->location.x, direction->z - p->location.z);
 	Coordinate newDirection = {
-		direction->x / dist * BULLET_SPEED,
-		direction->y / dist * BULLET_SPEED,
-		direction->z / dist * BULLET_SPEED
+		(direction->x - p->location.x) / dist * BULLET_SPEED,
+		(direction->y - p->location.y) / dist * BULLET_SPEED,
+		(direction->z - p->location.z) / dist * BULLET_SPEED
 	};
 	Bullet *newBullet = (Bullet *)malloc(sizeof(Bullet));
 	copyCoordinate(&newBullet->location, &p->location);
 	copyCoordinate(&newBullet->velocity, &newDirection);
-	for (int i=0; i<10; i++) {
+	for (int i=0; i<8; i++) {
 		bullet_calcNext(newBullet);
 	}
 	newBullet->player_id = p->id;
 	newBullet->damage = BULLET_DAMAGE;
-	printf("bullet(%lf,%lf,%lf)\n",newBullet->location.x,newBullet->location.y,newBullet->location.z);
+	// printf("bullet(%lf,%lf,%lf)\n",newBullet->location.x,newBullet->location.y,newBullet->location.z);
 	bullet_throw(newBullet);//弾側に投げる
 	p->sleep_bullet = fieldinfo->elapsed_time + 0.5 * FPS;
 }
@@ -171,58 +186,70 @@ void player_hp(double hp,Player *player){//指定された分hpを減らす
 // }
 
 void player_random_move(Player *p){
-	int num = rand() % 3;//上下左右弾壁
-	switch (num){
-		case 0://移動
-			player_to(p, rand() % 3 - 1, rand() % 3 - 1);
-			break;
-		case 1://壁
+	int num = rand() % 2;//上下左右弾壁
+	num = 1;
+	switch (num) {
+		case 0: {
 			player_make_shield(p, p->location.rotate);
 			break;
-		case 2://弾
-			player_make_bullet(p, &fieldinfo->me->location);
+		}
+		case 1: {
+			Coordinate c = {rand() % FIELD_MAX_X, 0, rand() % FIELD_MAX_Z, 0};
+			player_make_bullet(p, &c);
 			break;
+		}
+		default: {
+			player_to(p, rand() % 3 - 1, rand() % 3 - 1);
+			break;
+		}
 	}
-	printf("%d\n",num);
-	printf("(%lf,%lf,%lf,%lf)\n",p->location.x,p->location.y,p->location.z,p->location.rotate);
+	// printf("random: %s:(%lf,%lf,%lf,%lf)\n",p->name,p->location.x,p->location.y,p->location.z,p->location.rotate);
 }
 
 void player_cannon(Player *c){
 	int num = rand() % 5 + 1;
 	if(num==1){
 		player_make_bullet(c, &fieldinfo->me->location);
-		printf("makebullet1");
 	}else if(num==2){
 		player_make_bullet(c, &fieldinfo->enemies[rand() % ENEMY_NUM]->location);
-		printf("makebullet2");
 	}
-	printf("%d\n",num);
 }
 
-void player_hitPlace(Player *p, Coordinate **c, double radius) {
+void player_hitPlace(Player *p, Coordinate c[], double radius) {
 	int angle = 1;
+	glBegin(GL_LINE_LOOP);
 	for (int i=0; i<4; i++, angle -= 2) {
-		c[i]->x = p->location.x + cos(angle / 4.0 * M_PI) * radius;
-		c[i]->z = p->location.z + sin(angle / 4.0 * M_PI) * radius;
+		c[i].x = p->location.x + cos(angle / 4.0 * M_PI) * radius;
+		c[i].z = p->location.z + sin(angle / 4.0 * M_PI) * radius;
+		glVertex3d(c[i].x, 5, c[i].z);
 	}
+	glEnd();
 }
 
 void update_snowman(Player *p) {
 	// player_random_move(p);
 	player_cannon(p);
-	Coordinate *c[4];
+	Coordinate c[4];
 	player_hitPlace(p, c, 5);
 	bullet_hit(c);
+	draw_snowman(&p->location);
 }
 
 int update_player(){
 	for (int i=0; i<100; i++) {
-		update_snowman(fieldinfo->cannon[i]);
+		if (fieldinfo->cannon[i] != NULL) {
+			update_snowman(fieldinfo->cannon[i]);
+		}
 	}
 	Player *me = fieldinfo->me;
-	Coordinate *c[4];
+	player_random_move(me);
+	Coordinate c[4];
 	player_hitPlace(me, c, 5);
-	player_hp(bullet_hit(c),me);
+	int damage = bullet_hit(c);
+	if (damage) {
+		// player_hp(damage,me);
+		printf("got hit\n");
+	}
 	ws_sendPlayer(me);
 	put_character(me->c,&me->location);
 	if (me->hp <= 0) {
@@ -234,11 +261,15 @@ int update_player(){
 int update_enemy_offline(int enemy_id) {
 	Player *enemy = fieldinfo->enemies[enemy_id];
 	player_random_move(enemy);
-	Coordinate *c[4];
+	Coordinate c[4];
 	player_hitPlace(enemy, c, 5);
-	player_hp(bullet_hit(c), enemy);
-	ws_sendPlayer(enemy);
-	put_character(enemy->c, &enemy->location);
+	double damage = bullet_hit(c);
+	if (damage) {
+		// player_hp(damage, enemy);
+		printf("%s got hit\n", enemy->name);
+	}
+	pthread_t tid = ws_sendPlayer(enemy);
+	pthread_join(tid, NULL);
 	if (enemy->hp <= 0) {
 		return EXIT_FAILURE;
 	}

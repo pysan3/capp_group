@@ -22,7 +22,7 @@ typedef struct {
 } Player;
 
 #define BULLET_RADIUS 1
-#define BULLET_SPEED 10
+#define BULLET_SPEED 1.0
 #define BULLET_DAMAGE 30
 
 typedef struct {
@@ -32,7 +32,7 @@ typedef struct {
     int player_id;
 } Bullet;
 
-#define WALL_HEIGHT 10
+#define WALL_HEIGHT 8
 
 typedef struct {
     Coordinate location;

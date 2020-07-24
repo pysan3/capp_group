@@ -8,20 +8,21 @@
 
 Wall **walls = NULL;
 int wall_count=0;
+int wall_start=0;
 
 void wall_init(Wall** wall){
     walls=wall;
 }
 
-void wall_corner(int i, Coordinate **corner){
-    corner[0]->x = (walls[i]->location.x+1)*cos(walls[i]->location.rotate);
-    corner[1]->x = (walls[i]->location.x-1)*cos(walls[i]->location.rotate);
-    corner[2]->x = (walls[i]->location.x-1)*cos(walls[i]->location.rotate);
-    corner[3]->x = (walls[i]->location.x+1)*cos(walls[i]->location.rotate);
-    corner[0]->z = (walls[i]->location.z-3)*sin(walls[i]->location.rotate);
-    corner[1]->z = (walls[i]->location.z-3)*sin(walls[i]->location.rotate);
-    corner[2]->z = (walls[i]->location.z+3)*sin(walls[i]->location.rotate);
-    corner[3]->z = (walls[i]->location.z+3)*sin(walls[i]->location.rotate);
+void wall_corner(int i, Coordinate corner[]){
+    corner[0].x = (walls[i]->location.x+2)*cos(walls[i]->location.rotate);
+    corner[1].x = (walls[i]->location.x-2)*cos(walls[i]->location.rotate);
+    corner[2].x = (walls[i]->location.x-2)*cos(walls[i]->location.rotate);
+    corner[3].x = (walls[i]->location.x+2)*cos(walls[i]->location.rotate);
+    corner[0].z = (walls[i]->location.z-4)*sin(walls[i]->location.rotate);
+    corner[1].z = (walls[i]->location.z-4)*sin(walls[i]->location.rotate);
+    corner[2].z = (walls[i]->location.z+4)*sin(walls[i]->location.rotate);
+    corner[3].z = (walls[i]->location.z+4)*sin(walls[i]->location.rotate);
 }
 
 void updata_wall(int player_id){
@@ -31,19 +32,19 @@ void updata_wall(int player_id){
         wall_count++;
     }
     Coordinate c[4];
-    Coordinate *corner[4];
-    for (int i=0; i<4; i++) {
-        corner[i] = &c[i];
-    }
 
-    for(int i=0;i<wall_count;i++){
+    for(int i=wall_start;i<wall_count;i++){
+        if (walls[i] == NULL) {
+        if (i == wall_start) wall_start++;
+        continue;
+        }
         walls[i]->remain--;
         if(walls[i]->remain<=0) {
-            free(walls[i]);
+            walls[i] = NULL;
             continue;
         }
-        wall_corner(i, corner);
-        bullet_hit(corner);
+        wall_corner(i, c);
+        bullet_hit(c);
         draw_wall(&walls[i]->location);
     }
 }

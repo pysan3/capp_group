@@ -5,10 +5,16 @@
 //fieldinfoを得る
 void player_fieldget(FieldInfo *fieldinfo);
 
+void player_init(Player *p, double x, double z, char name[], Character c);
+
 //IDと名前を受け取ってplayerを生成する
 int update_player(void);
 
+void player_hitPlace(Player *p, Coordinate c[], double radius);
+
 int update_enemy_offline(int enemy_id);
+
+void update_snowman(Player *p);
 
 //playerを矢印キーで動かす
 void player_move();//ok

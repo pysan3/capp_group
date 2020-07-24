@@ -309,9 +309,8 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
 	while (arrivals.start_from == NULL) sleep(1);
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
-    current_time.tv_sec -= arrivals.start_from->tv_sec;
-    current_time.tv_usec -= arrivals.start_from->tv_usec;
 	long time_wait = (arrivals.start_from->tv_sec - current_time.tv_sec) * MICRO + (arrivals.start_from->tv_usec - current_time.tv_usec);
+	printf("%ld\n", time_wait);
     if (time_wait < 0) {
         fprintf(stderr, "not good connection with the server\n");
         exit(EXIT_FAILURE);

@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
         player_enemy_move();
     }
     for(i=0;i<10;i++){
-        player_cannon();
+        // player_cannon(&me);
     }
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
