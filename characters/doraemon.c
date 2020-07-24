@@ -284,6 +284,10 @@ void body(void) {
 
 void draw_doraemon(void) {
     glPushMatrix();
+    glRotatef(-90,1,0,0);
+    glRotatef(-90,0,0,1);
+    glTranslatef(0,0,1.5);
+    glScalef(0.8,0.8,0.8);
 
     // 顔
     glPushMatrix();

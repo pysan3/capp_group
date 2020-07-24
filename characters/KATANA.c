@@ -177,10 +177,8 @@ void kabutogane(void)
 
 void draw_KATANA(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glLightfv(GL_LIGHT0,GL_POSITION,pos);
+	glPushMatrix();
+	glTranslatef(0,0.5,0);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, blackam);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, blackdiff);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, blackspe);
@@ -208,6 +206,7 @@ void draw_KATANA(void)
 	glMaterialfv(GL_FRONT, GL_SPECULAR, blackspe);
 	glMaterialfv(GL_FRONT, GL_SHININESS, &blacksh);
 	kabutogane();//兜金の部分
+	glPopMatrix();
 }
 
 
