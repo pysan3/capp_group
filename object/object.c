@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define PI 3.141592
+#ifndef M_PI
+	#define M_PI 3.141592
+#endif
 
 enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK };
 GLfloat color[][4] = {
@@ -84,17 +86,17 @@ void draw_snowman(Coordinate *location){
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
     glTranslatef(location->x,location->y,location->z);
-	glRotatef(location->rotate,0,1,0);
+	glRotatef(location->rotate * 180 / M_PI,0,1,0);
 	glTranslatef(0,1,0);
     glutSolidSphere(1.0,30,30);
     glTranslatef(0,1.5,0);
     glutSolidSphere(0.7,30,30);
     glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[BLACK]);
-    glTranslatef(0.7*sin(70*PI/180)*sin(30*PI/180),0.7*cos(70*PI/180),-0.7*sin(70*PI/180)*cos(30*PI/180));
+	glTranslatef(0.7*sin(70*M_PI/180)*sin(30*M_PI/180),0.7*cos(70*M_PI/180),-0.7*sin(70*M_PI/180)*cos(30*M_PI/180));
     glutSolidSphere(0.1,30,30);
-    glTranslatef(-1.4*sin(70*PI/180)*sin(30*PI/180),0,0);
+	glTranslatef(-1.4*sin(70*M_PI/180)*sin(30*M_PI/180),0,0);
     glutSolidSphere(0.1,30,30);
-    glTranslatef(0.7*sin(70*PI/180)*sin(30*PI/180),-0.7*cos(70*PI/180),0.7*sin(70*PI/180)*cos(30*PI/180));
+	glTranslatef(0.7*sin(70*M_PI/180)*sin(30*M_PI/180),-0.7*cos(70*M_PI/180),0.7*sin(70*M_PI/180)*cos(30*M_PI/180));
     glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[ORANGE]);
     glTranslatef(0,-1.5,0);
     glRotatef(180,1,0,0);
@@ -133,7 +135,7 @@ void draw_wall(Coordinate *location){
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
 	glTranslatef(location->x,location->y,location->z);
-	glRotatef(location->rotate,0,1,0);
+	glRotatef(location->rotate * 180 / M_PI,0,1,0);
 	glTranslatef(-1.5,0,0);
 	for(int i=1;i<30;i++){
 		for(int j=1;j<=40;j++){
@@ -151,7 +153,7 @@ void put_character(Character c,Coordinate *location){
     glMaterialf(GL_FRONT, GL_SHININESS, 80);
     glPushMatrix();
 	glTranslatef(location->x,location->y,location->z);
-	glRotatef(location->rotate,0,1,0);
+	glRotatef(location->rotate * 180 / M_PI,0,1,0);
 	glScalef(PLAYER_HEIGHT, PLAYER_HEIGHT, PLAYER_HEIGHT);
 	draw_character(c);
 
