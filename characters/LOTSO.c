@@ -147,6 +147,7 @@ void draw_LOTSO(void) {
 	glPushMatrix();
     glTranslatef(0,2.2,0);
     glScalef(0.55,0.55,0.55);
+    glRotatef(90, 0, 1, 0);
     pinkpart();
     whitepart();
     darkpinkpart();

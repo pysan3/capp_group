@@ -179,6 +179,7 @@ void draw_KATANA(void)
 {
 	glPushMatrix();
 	glTranslatef(0,0.5,0);
+    glRotatef(90, 0, 1, 0);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, blackam);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, blackdiff);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, blackspe);

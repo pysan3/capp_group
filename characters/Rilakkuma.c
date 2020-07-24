@@ -248,6 +248,7 @@ void draw_Rilakkuma(void)
 	glPushMatrix();
 	glTranslatef(0,1.8,1);
 	glScalef(0.3,0.3,0.3);
+    glRotatef(90, 0, 1, 0);
 	kthead();
 	ktear();
 	ktbody();
