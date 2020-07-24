@@ -43,17 +43,17 @@ void player_to(Player *p, int x, int z) {
 void player_move(int value)//プレイヤーの移動
 {
 	int x = 0, z = 0;
-	if (mySpecialValue == 1 << 0){
+	if (mySpecialValue == 1 << 0){//右
 		x = 1;
 	}
-	if (mySpecialValue == 1 << 1){
-		z = 1;
+	if (mySpecialValue == 1 << 1){//上
+		z = -1;
 	}
-	if (mySpecialValue == 1 << 2){
+	if (mySpecialValue == 1 << 2){//左
 		x = -1;
 	}
-	if (mySpecialValue == 1 << 3){
-		z = -1;
+	if (mySpecialValue == 1 << 3){//下
+		z = 1;
 	}
 	player_to(fieldinfo->me, x, z);
 
