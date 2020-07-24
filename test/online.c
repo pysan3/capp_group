@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     }
 
     // ここからが実際の処理
-    ws_init(f_info.isOnline, &f_info.elapsed_time);
+    ws_init(f_info.isOnline, &f_info.elapsed_time, &f_info.isUpdated);
 
     Player me = {0, {0, 0, 0}, 150, "", 0, 0, DORAEMON};
     {

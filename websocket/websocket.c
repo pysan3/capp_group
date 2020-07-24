@@ -8,24 +8,25 @@
 #include <string.h>
 
 int isOnline;
+int *isUpdated;
 
 int ws_createNewGameID(void) {
     printf("websocket: connecting to server for new gameID\n");
     return multi_createNewGameID();
 }
 
-int ws_init(int gameID, int *time) {
+int ws_init(int gameID, int *time, int *updated) {
     if (gameID != 0) {
         fprintf(stderr, "online functions are not created yet\n");
     }
     isOnline = gameID;
+    isUpdated = updated;
     return isOnline
     ? multi_init(isOnline, time)
     : cp_init(isOnline, time);
 }
 
 int ws_close(int gameID) {
-    isOnline = gameID;
     return isOnline
     ? multi_close(isOnline)
     : cp_close(isOnline);
@@ -41,6 +42,7 @@ pthread_t ws_createPlayer(Player *p, int *id) {
 }
 
 pthread_t ws_sendPlayer(Player *p) {
+    if (!*isUpdated) return 0;
     pthread_t tid;
     pthread_create(&tid, NULL, isOnline ? multi_sendPlayer_th : cp_sendPlayer_th, p);
     return tid;

@@ -54,7 +54,7 @@ int main(void) {
     FieldInfo f_info;
     f_info.elapsed_time = 10;
     f_info.isOnline = 0;
-    ws_init(f_info.isOnline, &f_info.elapsed_time);
+    ws_init(f_info.isOnline, &f_info.elapsed_time, &f_info.isUpdated);
 
     pthread_t enemy_threads[ENEMY_NUM];
     int enemy_index[ENEMY_NUM];

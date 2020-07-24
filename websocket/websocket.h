@@ -11,7 +11,7 @@ int ws_createNewGameID(void);
 // 必ず最初に1回だけ呼び出すこと
 // 引数:gameID:接続するゲームのID
 // 戻り値が-1の場合fail、エラーを吐いて終了すること
-int ws_init(int gameID, int *time);
+int ws_init(int gameID, int *time, int *updated);
 
 // wsコネクション切断
 // 必ず最後に1回だけ呼び出すこと
