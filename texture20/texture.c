@@ -12,7 +12,7 @@ void texture_init(void) {
 
     GLubyte texture[TEXHEIGHT * TEXWIDTH * 4];
 
-    makeNormalMap(texture, TEXWIDTH, TEXHEIGHT, 20.0, "/mnt/c/Users/takut/Documents/Git/capp_group/texture20/new_bump_b.raw");
+    makeNormalMap(texture, TEXWIDTH, TEXHEIGHT, 20.0, "../texture20/new_bump_b.raw");
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXWIDTH, TEXHEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture);
 
