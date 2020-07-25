@@ -7,7 +7,7 @@ if (APPLE)
 endif()
 
 link_libraries(m)
-add_compile_options(-Ofast -Wall -Wno-unused-result)
+add_compile_options(-g -Wall -Wno-unused-result)
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
