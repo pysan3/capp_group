@@ -17,8 +17,7 @@ void cc_makeme(FieldInfo *f_info){
     printf("----------------------------------------------\n");
     printf("Input your name: ");
     // TODO: testing
-    // scanf("%s", myname);
-    strcpy(myname, "player");
+    scanf("%s", myname);
     myname[99] = '\0';
     printf("Your name is %s\n",myname);
     printf("----------------------------------------------\n");
@@ -37,8 +36,8 @@ void cc_makeme(FieldInfo *f_info){
     while(cnum<0 || cnum>3){
         printf("Input character number: ");
         // TODO: testing
-        // scanf("%d",&cnum);
-        cnum = 0;
+        scanf("%d",&cnum);
+        // cnum = 0;
         if(cnum>-1&&cnum<4){
             break;
         }
@@ -62,8 +61,8 @@ void cc_makeme(FieldInfo *f_info){
     printf("----------------------------------------------\n");
 
     f_info->me = (Player *)malloc(sizeof(Player));
-    // player_init(f_info->me, rand() % FIELD_MAX_X, rand() % FIELD_MAX_Z, myname, cnum);
-    player_init(f_info->me, 20, 50, "test player", rand() % 4);
+    player_init(f_info->me, rand() % FIELD_MAX_X, rand() % FIELD_MAX_Z, myname, cnum);
+    // player_init(f_info->me, 20, 50, "test player", rand() % 4);
 }
 
 void cc_window(){}
