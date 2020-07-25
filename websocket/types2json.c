@@ -98,12 +98,12 @@ Coordinate *Coordinate_json(const json_t *json, Coordinate *c) {
 }
 
 Player *Player_json(const json_t *json, Player *p) {
-    Coordinate_json(json_getProperty(json, "location"), &p->location);
     p->id = json_getInteger(json_getProperty(json, "id"));
+    Coordinate_json(json_getProperty(json, "location"), &p->location);
     p->hp = json_getInteger(json_getProperty(json, "hp"));
+    strcpy(p->name, json_getPropertyValue(json, "name"));
     p->sleep_bullet = json_getInteger(json_getProperty(json, "sleep_bullet"));
     p->sleep_wall = json_getInteger(json_getProperty(json, "sleep_wall"));
-    strcpy(p->name, json_getPropertyValue(json, "name"));
     p->c = json_getInteger(json_getProperty(json, "Character"));
     return p;
 }

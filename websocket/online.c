@@ -120,7 +120,7 @@ int onerror(wsclient *c, wsclient_error *err) {
 int onmessage(wsclient *c, wsclient_message *msg) {
 	int isError = 0;
 	fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
-	json_t mem[1024];
+	json_t mem[5000];
 	json_t const *json = json_create(msg->payload, mem, sizeof(mem)/sizeof(mem[0]));
 	if (!json) {
 		printf("newGameID: Error while creating json\n");
@@ -167,14 +167,14 @@ int onopen(wsclient *c) {
 
 int receiveNewGameID(wsclient *c, wsclient_message *msg) {
 	json_t mem[32];
+	fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
 	json_t const *json = json_create(msg->payload, mem, sizeof(mem)/sizeof(mem[0]));
 	if (!json) {
 		printf("newGameID: Error while creating json\n");
 		return EXIT_FAILURE;
 	}
 	if (strcmp(json_getPropertyValue(json, "name"), "newGameID") == 0) {
-		json_t const *id = json_getProperty(json, "id");
-		arrivals.gameID = (int)json_getInteger(id);
+		arrivals.gameID = (int)json_getInteger(json_getProperty(json, "id"));
 	} else {
 		printf("receiveNewGameID: something went wrong\n");
 		exit(EXIT_FAILURE);
@@ -196,8 +196,8 @@ int multi_createNewGameID(void) {
 	printf("createNewGame: %s\n", resp);
 	libwsclient_send(myclient, resp);
 	while (arrivals.gameID == 0) sleep(1);
+	libwsclient_close(myclient);
 	libwsclient_finish(myclient);
-	printf("got game id\n");
 	return arrivals.gameID;
 }
 

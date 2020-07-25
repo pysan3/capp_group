@@ -154,7 +154,8 @@ void game_init(void) {
     } while (user_input != 0 && user_input != 1);
     if (user_input == 1) {
         printf("Enter GameID: [-1 to create new] ");
-        scanf("%d", &user_input);
+        // scanf("%d", &user_input);
+        user_input = -1;
         if (user_input == -1) {
             f_info->isOnline = ws_createNewGameID();
             printf("received a new gameID from server: %d\n", f_info->isOnline);
@@ -187,6 +188,7 @@ void game_init(void) {
 
     tid = ws_createPlayer(f_info->me, &f_info->me->id);
     pthread_join(tid, NULL);
+    printf("id: %d\n", f_info->me->id);
     tid = ws_loadEnemies(f_info->me->id, f_info->enemies);
     pthread_join(tid, NULL);
 }
@@ -238,8 +240,6 @@ void init(void) {
     glutKeyboardFunc(myKeyboardFunc);
 	glutKeyboardUpFunc(myKeyboardUpFunc);
 	glutMouseFunc(myMouseFunc);
-
-    glutIdleFunc(idle);
 }
 
 int main(int argc, char *argv[]) {
@@ -250,6 +250,7 @@ int main(int argc, char *argv[]) {
     glutCreateWindow("Group A");
     init();
     glutDisplayFunc(display);
+    glutIdleFunc(idle);
     glutMainLoop();
 
     return 0;
