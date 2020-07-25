@@ -97,15 +97,21 @@ void display(void) {
     }
     int enemies_hp = 0;
     for (int i=0; i<ENEMY_NUM; i++) {
+        put_character(f_info->enemies[i]->c, &f_info->enemies[i]->location);
+        draw_string(f_info->enemies[i]->name, &f_info->enemies[i]->location);
+        enemies_hp += f_info->enemies[i]->hp > 0;
+        // 当たり判定の枠を表示
+        // TODO: ここ消す
         Coordinate c[4];
         player_hitPlace(f_info->enemies[i], c, 3);
-        put_character(f_info->enemies[i]->c, &f_info->enemies[i]->location);
-        enemies_hp += f_info->enemies[i]->hp > 0;
     }
-    // if (!enemies_hp) {
-    //     printf("you won\n");
-    //     exit(0);
-    // }
+    if (!enemies_hp) {
+        printf("you won\n");
+        exit(0);
+    } else if (f_info->elapsed_time > 3 * FPS) {
+        printf("draw\n");
+        exit(0);
+    }
     updata_wall(f_info->me->id);
 
     print_axes();
@@ -222,7 +228,7 @@ void init(void) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(30.0, 16.0 / 9, 1.0, 1000.0);
+    gluPerspective(30.0, 16.0 / 9, 1.0, 250.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(FIELD_MAX_X / 2, FIELD_MAX_Y, FIELD_MAX_Z * sqrt(3), FIELD_MAX_X / 2, 0, FIELD_MAX_Z / 2, 0, 1, 0);

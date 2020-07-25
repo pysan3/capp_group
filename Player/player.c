@@ -71,7 +71,7 @@ void player_move(int value)//プレイヤーの移動
 	}
 	player_to(fieldinfo->me, x, z);
 
-	printf("player move: (%lf,%lf,%lf,%lf)\n",fieldinfo->me->location.x,fieldinfo->me->location.y,fieldinfo->me->location.z,fieldinfo->me->location.rotate);
+	// printf("player move: (%lf,%lf,%lf,%lf)\n",fieldinfo->me->location.x,fieldinfo->me->location.y,fieldinfo->me->location.z,fieldinfo->me->location.rotate);
 	if (mySpecialValue)glutTimerFunc(1000 / FPS, player_move, 0);
 }
 
@@ -151,7 +151,13 @@ void player_make_shield(Player *player, double rotate){
 void myMouseFunc(int button,int state,int x,int y){//とりあえずタップ
 	if((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN))
 	{
-		Coordinate c = {x, 0, y};
+		Coordinate c = {
+			(640+(x-640.0)*((720.0-y)/574.0*0.625+1))*FIELD_MAX_X/1280.0,
+			0,
+			(y - 146.0) / 574.0 * FIELD_MAX_Z,
+			0
+		};
+		printf("(%d, %d)\n", x, y);
 		player_make_bullet(fieldinfo->me, &c);
 	}
 }
