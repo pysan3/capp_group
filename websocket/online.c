@@ -192,7 +192,7 @@ int multi_createNewGameID(void) {
 	libwsclient_onmessage(myclient, &receiveNewGameID);
 	libwsclient_run(myclient);
 	char resp[1000];
-	int resp_len = data_to_json(resp, "generateGameID", NULL);
+	data_to_json(resp, "generateGameID", NULL);
 	printf("createNewGame: %s\n", resp);
 	libwsclient_send(myclient, resp);
 	while (arrivals.gameID == 0) sleep(1);
@@ -222,7 +222,7 @@ int multi_init(int id, int *time) {
 	// send gameid
 	char resp[64], data[64];
 	sprintf(data, "\"gameID\":%d,", arrivals.gameID);
-	int resp_len = data_to_json(resp, "login", data, NULL);
+	data_to_json(resp, "login", data, NULL);
 	printf("init: %s\n", resp);
 	libwsclient_send(client, resp);
 	return (arrivals.gameID == id) - 1;
@@ -237,7 +237,7 @@ int multi_close(int gameID) {
 void multi_createPlayer_th(threatPlayer *tp) {
 	char resp[1000], data[1000];
 	json_Player(data, "player", tp->p);
-	int resp_len = data_to_json(resp, "createPlayer", data, NULL);
+	data_to_json(resp, "createPlayer", data, NULL);
 	printf("createPlayer: %s\n", resp);
 	libwsclient_send(client, resp);
 	while (arrivals.playerID == NULL) sleep(1);
@@ -249,7 +249,7 @@ void multi_createPlayer_th(threatPlayer *tp) {
 void multi_sendPlayer_th(Player *p) {
 	char resp[1000], data[1000];
 	json_Player(data, "player", p);
-	int resp_len = data_to_json(resp, "updatePlayer", data, NULL);
+	data_to_json(resp, "updatePlayer", data, NULL);
 	printf("sendPlayer: %s\n", resp);
 	libwsclient_send(client, resp);
 }
@@ -258,7 +258,7 @@ void multi_sendNewBullet_th(playersBullet *pb) {
 	char resp[1000], data[1000], id[1000];
 	json_playerID(id, pb->player_id);
 	json_Bullet(data, "bullet", pb->b);
-	int resp_len = data_to_json(resp, "newBullet", id, data, NULL);
+	data_to_json(resp, "newBullet", id, data, NULL);
 	printf("newBullet: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(pb);
@@ -268,7 +268,7 @@ void multi_sendNewWall_th(playersWall *pw) {
 	char resp[1000], data[1000], id[1000];
 	json_playerID(id, pw->player_id);
 	json_Wall(data, "wall", pw->w);
-	int resp_len = data_to_json(resp, "newWall", id, data, NULL);
+	data_to_json(resp, "newWall", id, data, NULL);
 	printf("newWall: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(pw);
@@ -291,11 +291,11 @@ Player **multi_getAllEnemyInfo(int player_id) {
 }
 
 Bullet *multi_getNewBullet(int player_id) {
-	multi_bullet_pop_front(&arrivals.bulletlist);
+	return multi_bullet_pop_front(&arrivals.bulletlist);
 }
 
 Wall *multi_getNewWall(int player_id) {
-	multi_wall_pop_front(&arrivals.walllist);
+	return multi_wall_pop_front(&arrivals.walllist);
 }
 
 void multi_loadEnemies_th(threadLoadEnemy *le) {
@@ -322,7 +322,7 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
 
 void multi_dead_th(threatPlayer *tp) {
 	char resp[1000];
-	int resp_len = data_to_json(resp, "dead", NULL);
+	data_to_json(resp, "dead", NULL);
 	printf("dead: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(tp);

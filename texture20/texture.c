@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-static const GLfloat lightpos[] = { 0.0, 0.0, 1.0, 0.0 };
-static const GLfloat lightcol[] = { 1.0, 1.0, 1.0, 1.0 };
-static const GLfloat lightamb[] = { 0.1, 0.1, 0.1, 1.0 };
-
 #define TEXWIDTH  256 * 2
 #define TEXHEIGHT 256 * 2
 

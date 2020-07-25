@@ -18,7 +18,7 @@ char *json_data(char *buf, char const *name, const char *args, ...) {
     va_start(ap, args);
     for (const char *arg = args; arg != NULL; arg = va_arg(ap, const char *)) {
         int data_length = strlen(arg);
-        strncpy(buf, arg, data_length);
+        strcpy(buf, arg);
         buf += data_length - 1;
     }
 	return json_objClose(buf);

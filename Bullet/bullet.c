@@ -38,10 +38,6 @@ int ishit_dig(double a, double b, double r, double h, double w){
   else return 0;
 }
 
-static double distance(double a, double b) {
-	return sqrt(a * a + b * b);
-}
-
 static int collision(GLfloat L, GLfloat R, GLfloat T, GLfloat B, GLfloat x, GLfloat y, double radius) {
   if(L - radius > x || R + radius < x || T - radius > y || B + radius < y){//矩形の領域判定1
     return 0;
@@ -65,11 +61,9 @@ double bullet_hit(Coordinate corner[4]){
   double damage = 0;
 
   double x1 = corner[0].x;
-  double x2 = corner[1].x;
   double x3 = corner[2].x;
   double x4 = corner[3].x;
   double z1 = corner[0].z;
-  double z2 = corner[1].z;
   double z3 = corner[2].z;
   double z4 = corner[3].z;
 
@@ -78,7 +72,6 @@ double bullet_hit(Coordinate corner[4]){
   // r = BULLET_RADIUS;
 
   Bullet *tmp;
-  double corner_size = distance(x3-x1, z3-z1);
   double theta = atan((x3-x4)/(z3-z4));
   double rotate_sin = sin(theta);
   double rotate_cos = cos(theta);

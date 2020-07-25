@@ -197,7 +197,6 @@ void pocket(double max_r) {
     glPushMatrix();
     glTranslatef(max_r, 0, -0.7);
     glRotate(0, -M_PI / 64, 0);
-    GLfloat new[] = {0.3, 0.3, 0.3, 1};
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
     glBegin(GL_TRIANGLE_FAN);
     glVertex3d(0, 0, 0);

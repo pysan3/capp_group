@@ -31,14 +31,13 @@ void libwsclient_run(wsclient *c) {
 		pthread_mutex_unlock(&c->lock);
 	}
 	if(c->sockfd) {
-		int res = pthread_create(&c->run_thread, NULL, libwsclient_run_thread, (void *)c);
+		pthread_create(&c->run_thread, NULL, libwsclient_run_thread, (void *)c);
 	}
 }
 
 void *libwsclient_run_thread(void *ptr) {
 	wsclient *c = (wsclient *)ptr;
 	wsclient_error *err = NULL;
-	int sockfd;
 	char buf[1024];
 	int n, i;
 	do {
@@ -223,7 +222,6 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 
 inline void libwsclient_in_data(wsclient *c, char in) {
 	wsclient_frame *current = NULL, *new = NULL;
-	unsigned char payload_len_short;
 	pthread_mutex_lock(&c->lock);
 	if(c->current_frame == NULL) {
 		c->current_frame = (wsclient_frame *)malloc(sizeof(wsclient_frame));
@@ -265,7 +263,7 @@ inline void libwsclient_in_data(wsclient *c, char in) {
 
 void libwsclient_dispatch_message(wsclient *c, wsclient_frame *current) {
 	unsigned long long message_payload_len, message_offset;
-	int message_opcode, i;
+	int message_opcode;
 	char *message_payload;
 	wsclient_frame *first = NULL;
 	wsclient_message *msg = NULL;
@@ -438,6 +436,8 @@ int libwsclient_helper_socket(wsclient *c, const char *path) {
 
 	c->helper_sock = sockfd;
 	pthread_create(&c->helper_thread, NULL, libwsclient_helper_socket_thread, (void *)c);
+
+	return EXIT_SUCCESS;
 }
 
 void *libwsclient_helper_socket_thread(void *ptr) {
@@ -548,7 +548,7 @@ void *libwsclient_handshake_thread(void *ptr) {
 	char path[255];
 	char recv_buf[1024];
 	char *URI_copy = NULL, *p = NULL, *rcv = NULL, *tok = NULL;
-	int i, z, sockfd, n, flags = 0, headers_space = 1024;
+	int i, z, sockfd, n, flags = 0;
 	URI_copy = (char *)malloc(strlen(URI)+1);
 	if(!URI_copy) {
 		fprintf(stderr, "Unable to allocate memory in libwsclient_new.\n");
@@ -723,7 +723,7 @@ void *libwsclient_handshake_thread(void *ptr) {
 			}
 		}
 	}
-	if(!flags & REQUEST_HAS_UPGRADE) {
+	if((!flags) & REQUEST_HAS_UPGRADE) {
 		if(client->onerror) {
 			err = libwsclient_new_error(WS_HANDSHAKE_NO_UPGRADE_ERR);
 			client->onerror(client, err);
@@ -732,7 +732,7 @@ void *libwsclient_handshake_thread(void *ptr) {
 		}
 		return NULL;
 	}
-	if(!flags & REQUEST_HAS_CONNECTION) {
+	if((!flags) & REQUEST_HAS_CONNECTION) {
 		if(client->onerror) {
 			err = libwsclient_new_error(WS_HANDSHAKE_NO_CONNECTION_ERR);
 			client->onerror(client, err);
@@ -741,7 +741,7 @@ void *libwsclient_handshake_thread(void *ptr) {
 		}
 		return NULL;
 	}
-	if(!flags & REQUEST_VALID_ACCEPT) {
+	if((!flags) & REQUEST_VALID_ACCEPT) {
 		if(client->onerror) {
 			err = libwsclient_new_error(WS_HANDSHAKE_BAD_ACCEPT_ERR);
 			client->onerror(client, err);
@@ -853,19 +853,13 @@ int libwsclient_send_fragment(wsclient *client, char *strdata, int len, int flag
 	unsigned char mask[4];
 	unsigned int mask_int;
 	unsigned long long payload_len;
-	unsigned char finNopcode;
 	unsigned int payload_len_small;
 	unsigned int payload_offset = 6;
 	unsigned int len_size;
-	unsigned long long be_payload_len;
 	unsigned int sent = 0;
-	int i, sockfd;
+	int i;
 	unsigned int frame_size;
 	char *data = NULL;
-
-
-	sockfd = client->sockfd;
-
 
 	if(client->flags & CLIENT_SENT_CLOSE_FRAME) {
 		if(client->onerror) {
@@ -977,17 +971,13 @@ int libwsclient_send(wsclient *client, char *strdata)  {
 	unsigned char mask[4];
 	unsigned int mask_int;
 	unsigned long long payload_len;
-	unsigned char finNopcode;
 	unsigned int payload_len_small;
 	unsigned int payload_offset = 6;
 	unsigned int len_size;
-	unsigned long long be_payload_len;
 	unsigned int sent = 0;
-	int i, sockfd;
+	int i;
 	unsigned int frame_size;
 	char *data;
-
-	sockfd = client->sockfd;
 
 	if(client->flags & CLIENT_SENT_CLOSE_FRAME) {
 		if(client->onerror) {
@@ -1022,7 +1012,6 @@ int libwsclient_send(wsclient *client, char *strdata)  {
 	mask_int = rand();
 	memcpy(mask, &mask_int, 4);
 	payload_len = strlen(strdata);
-	finNopcode = 0x81; //FIN and text opcode.
 	if(payload_len <= 125) {
 		frame_size = 6 + payload_len;
 		payload_len_small = payload_len;
@@ -1046,7 +1035,6 @@ int libwsclient_send(wsclient *client, char *strdata)  {
 	}
 	data = (char *)malloc(frame_size);
 	memset(data, 0, frame_size);
-	*data = finNopcode;
 	*(data+1) = payload_len_small | 0x80; //payload length with mask bit on
 	if(payload_len_small == 126) {
 		payload_len &= 0xffff;
