@@ -100,10 +100,6 @@ void display(void) {
         put_character(f_info->enemies[i]->c, &f_info->enemies[i]->location);
         draw_string(f_info->enemies[i]->name, &f_info->enemies[i]->location);
         enemies_hp += f_info->enemies[i]->hp > 0;
-        // 当たり判定の枠を表示
-        // TODO: ここ消す
-        Coordinate c[4];
-        player_hitPlace(f_info->enemies[i], c, 3);
     }
     if (!enemies_hp) {
         printf("you won\n");
@@ -130,7 +126,7 @@ void update_offline_enemy(int *index) {
     char name[100];
     sprintf(name, "enemy%d", enemy_id);
     Player *e = (Player *)malloc(sizeof(Player));
-    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, rand() % 4);
+    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, RILAKKUMA);
     tid = ws_createPlayer(e, &e->id);
     pthread_join(tid, NULL);
     printf("enemy %d, id: %d, hp: %d\n", enemy_id, e->id, e->hp);
@@ -154,7 +150,7 @@ void game_init(void) {
         printf("You want to play [0: offline, 1: online]? ");
         // TODO: testing
         // scanf("%d", &user_input);
-        user_input = 0;
+        user_input = 1;
     } while (user_input != 0 && user_input != 1);
     if (user_input == 1) {
         printf("Enter GameID: [-1 to create new] ");

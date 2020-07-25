@@ -11,8 +11,7 @@
 #include <sys/time.h>
 #include <sys/un.h>
 #include <signal.h>
-
-
+#include <string.h>
 
 #include <pthread.h>
 
@@ -147,6 +146,7 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 	memcpy(mask, &mask_int, 4);
 	pthread_mutex_lock(&c->lock);
 
+	printf("opcode: %x\n", ctl_frame->opcode);
 	switch(ctl_frame->opcode) {
 		case 0x8:
 			//close frame
@@ -971,6 +971,7 @@ int libwsclient_send(wsclient *client, char *strdata)  {
 	unsigned char mask[4];
 	unsigned int mask_int;
 	unsigned long long payload_len;
+	unsigned char finNopcode;
 	unsigned int payload_len_small;
 	unsigned int payload_offset = 6;
 	unsigned int len_size;
@@ -1012,6 +1013,7 @@ int libwsclient_send(wsclient *client, char *strdata)  {
 	mask_int = rand();
 	memcpy(mask, &mask_int, 4);
 	payload_len = strlen(strdata);
+	finNopcode = 0x81; //FIN and text opcode.
 	if(payload_len <= 125) {
 		frame_size = 6 + payload_len;
 		payload_len_small = payload_len;
@@ -1035,6 +1037,7 @@ int libwsclient_send(wsclient *client, char *strdata)  {
 	}
 	data = (char *)malloc(frame_size);
 	memset(data, 0, frame_size);
+	*data = finNopcode;
 	*(data+1) = payload_len_small | 0x80; //payload length with mask bit on
 	if(payload_len_small == 126) {
 		payload_len &= 0xffff;
