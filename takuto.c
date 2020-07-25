@@ -108,7 +108,7 @@ void display(void) {
     if (!enemies_hp) {
         printf("you won\n");
         exit(0);
-    } else if (f_info->elapsed_time > 3 * FPS) {
+    } else if (f_info->elapsed_time > 60 * FPS) {
         printf("draw\n");
         exit(0);
     }
