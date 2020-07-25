@@ -23,10 +23,14 @@ void player_move();//ok
 //sleep分連打できないようにする。
 void player_make_shield(Player *player, double rotate);//ok
 
+void enemy_make_shield(Player *player, double rotate, int iscp);//ok
+
 //ホイールで向きを決めて球を発射する
 //->ホイールはopenglだと使えないらしい、freeglっていうやつだとできるっぽい…？
 //クリックした場所に飛ばすよう変更
 void player_make_bullet(Player *p, Coordinate *direction);//ok
+
+void enemy_make_bullet(Player *p, Coordinate *direction, int iscp);//ok
 
 //playerのhpの更新
 //引数分減らす

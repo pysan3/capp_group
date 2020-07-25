@@ -185,7 +185,6 @@ void cp_loadEnemies_th(threadLoadEnemy *le) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
     long time_wait = (players.start_from.tv_sec - current_time.tv_sec) * MICRO + (players.start_from.tv_usec - current_time.tv_usec);
-    printf("%s-wait: %ld\n", players.list[le->player_id]->name, time_wait);
     if (time_wait < 0) {
         fprintf(stderr, "not good connection with the server\n");
         exit(EXIT_FAILURE);

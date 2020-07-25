@@ -3,7 +3,7 @@
 #include "../header.h"
 
 //FieldInfoのbulletのポインタの値をもってくる
-void bullet_init(Bullet **bullet);
+void bullet_init(Bullet **bullet, int *updated);
 
 //長方形の上下にいる場合
 int ishit_ud(double a, double b, double r, double h, double w);

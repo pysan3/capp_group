@@ -5,4 +5,4 @@ void updata_wall(int player_id);
 //wallの作成
 void wall_make(Wall* start);
 //Wall構造体のアドレスを取得
-void wall_init(Wall** wall);
+void wall_init(Wall** wall, int *updated);

@@ -34,7 +34,7 @@ void player_init(Player *p, double x, double z, char name[], Character c) {
     p->c = c;
 }
 
-double distance(double a, double b) {
+static double distance(double a, double b) {
 	return sqrt(a * a + b * b);
 }
 
@@ -128,7 +128,7 @@ void copyCoordinate(Coordinate *a, Coordinate *b) {
 	a->rotate = b->rotate;
 }
 
-void player_make_shield(Player *player, double rotate){
+void enemy_make_shield(Player *player, double rotate, int iscp) {
 	if (player->sleep_wall > fieldinfo->elapsed_time) return;
 	Wall *newWall = (Wall *)malloc(sizeof(Wall));
 	copyCoordinate(&newWall->location, &player->location);
@@ -139,8 +139,13 @@ void player_make_shield(Player *player, double rotate){
 	newWall->remain = 1 * FPS;
 	newWall->player_id = player->id;
 	wall_make(newWall);//壁側に投げる
-	printf("shield\n");
+	if (!iscp) ws_sendNewWall(player->id, newWall);
+	printf("%s: shield\n", player->name);
     player->sleep_wall = fieldinfo->elapsed_time + 3 * FPS;//再び作れるようにする
+}
+
+void player_make_shield(Player *player, double rotate){
+	enemy_make_shield(player, rotate, 0);
 }
 
 void myMouseFunc(int button,int state,int x,int y){//とりあえずタップ
@@ -151,7 +156,7 @@ void myMouseFunc(int button,int state,int x,int y){//とりあえずタップ
 	}
 }
 
-void player_make_bullet(Player *p, Coordinate *direction){
+void enemy_make_bullet(Player *p, Coordinate *direction, int iscp) {
 	if (p->sleep_bullet > fieldinfo->elapsed_time) return;
 	double dist = distance(direction->x - p->location.x, direction->z - p->location.z);
 	Coordinate newDirection = {
@@ -163,13 +168,20 @@ void player_make_bullet(Player *p, Coordinate *direction){
 	copyCoordinate(&newBullet->location, &p->location);
 	copyCoordinate(&newBullet->velocity, &newDirection);
 	for (int i=0; i<8; i++) {
-		bullet_calcNext(newBullet);
+		newBullet->location.x += newBullet->velocity.x;
+		newBullet->location.y += newBullet->velocity.y;
+		newBullet->location.z += newBullet->velocity.z;
 	}
 	newBullet->player_id = p->id;
 	newBullet->damage = BULLET_DAMAGE;
 	// printf("bullet(%lf,%lf,%lf)\n",newBullet->location.x,newBullet->location.y,newBullet->location.z);
 	bullet_throw(newBullet);//弾側に投げる
+	if (!iscp) ws_sendNewBullet(p->id, newBullet);
 	p->sleep_bullet = fieldinfo->elapsed_time + 0.5 * FPS;
+}
+
+void player_make_bullet(Player *p, Coordinate *direction){
+	enemy_make_bullet(p, direction, 0);
 }
 
 void player_hp(double hp,Player *player){//指定された分hpを減らす
@@ -186,16 +198,14 @@ void player_hp(double hp,Player *player){//指定された分hpを減らす
 // }
 
 void player_random_move(Player *p){
-	int num = rand() % 2;//上下左右弾壁
-	num = 1;
+	int num = rand() % 6;//上下左右弾壁
 	switch (num) {
 		case 0: {
 			player_make_shield(p, p->location.rotate);
 			break;
 		}
 		case 1: {
-			Coordinate c = {rand() % FIELD_MAX_X, 0, rand() % FIELD_MAX_Z, 0};
-			player_make_bullet(p, &c);
+			enemy_make_bullet(p, &fieldinfo->me->location, 1);
 			break;
 		}
 		default: {
@@ -217,8 +227,11 @@ void player_cannon(Player *c){
 
 void player_hitPlace(Player *p, Coordinate c[], double radius) {
 	int angle = 1;
-	glBegin(GL_LINE_LOOP);
-	for (int i=0; i<4; i++, angle -= 2) {
+	GLfloat white_[] = {1,1,1,1};
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white_);
+    glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
+	glBegin(GL_LINE_STRIP);
+	for (int i=0; i<4; i++, angle += 2) {
 		c[i].x = p->location.x + cos(angle / 4.0 * M_PI) * radius;
 		c[i].z = p->location.z + sin(angle / 4.0 * M_PI) * radius;
 		glVertex3d(c[i].x, 5, c[i].z);
@@ -242,16 +255,17 @@ int update_player(){
 		}
 	}
 	Player *me = fieldinfo->me;
-	player_random_move(me);
+	// player_random_move(me);
 	Coordinate c[4];
 	player_hitPlace(me, c, 5);
 	int damage = bullet_hit(c);
 	if (damage) {
-		// player_hp(damage,me);
-		printf("got hit\n");
+		player_hp(damage,me);
+		printf("you got hit, hp: %d\n", me->hp);
 	}
 	ws_sendPlayer(me);
 	put_character(me->c,&me->location);
+	draw_string(me->name, &me->location);
 	if (me->hp <= 0) {
 		return EXIT_FAILURE;
 	}
@@ -265,11 +279,12 @@ int update_enemy_offline(int enemy_id) {
 	player_hitPlace(enemy, c, 5);
 	double damage = bullet_hit(c);
 	if (damage) {
-		// player_hp(damage, enemy);
-		printf("%s got hit\n", enemy->name);
+		player_hp(damage, enemy);
+		printf("%s got hit, hp: %d\n", enemy->name, enemy->hp);
 	}
 	pthread_t tid = ws_sendPlayer(enemy);
 	pthread_join(tid, NULL);
+	// printf("%s: %d, (%lf, %lf)\n", enemy->name, enemy->hp, enemy->location.x, enemy->location.z);
 	if (enemy->hp <= 0) {
 		return EXIT_FAILURE;
 	}

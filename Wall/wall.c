@@ -7,11 +7,13 @@
 #include <math.h>
 
 Wall **walls = NULL;
+int *isUpdated;
 int wall_count=0;
 int wall_start=0;
 
-void wall_init(Wall** wall){
+void wall_init(Wall** wall, int *updated){
     walls=wall;
+    isUpdated = updated;
 }
 
 void wall_corner(int i, Coordinate corner[]){
@@ -38,7 +40,7 @@ void updata_wall(int player_id){
         if (i == wall_start) wall_start++;
         continue;
         }
-        walls[i]->remain--;
+        walls[i]->remain -= *isUpdated;
         if(walls[i]->remain<=0) {
             walls[i] = NULL;
             continue;
@@ -50,7 +52,6 @@ void updata_wall(int player_id){
 }
 
 void wall_make(Wall* start){
-    ws_sendNewWall(start->player_id, start);
     walls[wall_count] = start;
     wall_count++;
 }

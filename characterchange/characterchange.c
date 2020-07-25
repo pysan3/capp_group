@@ -62,7 +62,8 @@ void cc_makeme(FieldInfo *f_info){
     printf("----------------------------------------------\n");
 
     f_info->me = (Player *)malloc(sizeof(Player));
-    player_init(f_info->me, rand() % FIELD_MAX_X, rand() % FIELD_MAX_Z, myname, cnum);
+    // player_init(f_info->me, rand() % FIELD_MAX_X, rand() % FIELD_MAX_Z, myname, cnum);
+    player_init(f_info->me, 20, 50, "test player", rand() % 4);
 }
 
 void cc_window(){}

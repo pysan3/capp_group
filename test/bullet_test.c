@@ -9,7 +9,7 @@
 
 void printBullet(Bullet **b){
   int i;
-  for(i=0;i<10;i++){
+  for(i=0;i<1000;i++){
     if(b[i]==NULL) continue;
     printf("bullet %d : ( %lf, %lf, %lf)    velocity ( %lf, %lf, %lf)\n"
 	   ,i,b[i]->location.x,b[i]->location.y,b[i]->location.z
@@ -33,8 +33,8 @@ int main(void){
     f_info.bullets[i]=&b[i];
   }
   bullet_init(f_info.bullets);
-  
-  ws_init(0,&f_info.elapsed_time);
+
+  ws_init(0,&f_info.elapsed_time, &f_info.isUpdated);
   ws_createPlayer(f_info.me, &f_info.me->id);
   Coordinate corner[4] = { {1,4,4,0},
 			   {5,4,2,0},

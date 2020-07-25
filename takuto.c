@@ -98,14 +98,14 @@ void display(void) {
     int enemies_hp = 0;
     for (int i=0; i<ENEMY_NUM; i++) {
         Coordinate c[4];
-        player_hitPlace(f_info->enemies[i], c, 5);
+        player_hitPlace(f_info->enemies[i], c, 3);
         put_character(f_info->enemies[i]->c, &f_info->enemies[i]->location);
         enemies_hp += f_info->enemies[i]->hp > 0;
     }
-    if (!enemies_hp) {
-        printf("you won\n");
-        exit(0);
-    }
+    // if (!enemies_hp) {
+    //     printf("you won\n");
+    //     exit(0);
+    // }
     updata_wall(f_info->me->id);
 
     print_axes();
@@ -167,8 +167,8 @@ void game_init(void) {
     }
 
     player_fieldget(f_info);
-    bullet_init(f_info->bullets);
-    wall_init(f_info->walls);
+    bullet_init(f_info->bullets, &f_info->isUpdated);
+    wall_init(f_info->walls, &f_info->isUpdated);
     ws_init(f_info->isOnline, &f_info->elapsed_time, &f_info->isUpdated);
 
     // オフラインの場合に敵AIを作成
@@ -187,9 +187,6 @@ void game_init(void) {
     pthread_join(tid, NULL);
     tid = ws_loadEnemies(f_info->me->id, f_info->enemies);
     pthread_join(tid, NULL);
-    for (int i=0; i<ENEMY_NUM; i++) {
-        printf("enemy %d: %p\n", i, f_info->enemies[i]);
-    }
 }
 
 void idle(void) {
@@ -201,7 +198,7 @@ void idle(void) {
 }
 
 void init(void) {
-    srand(0);
+    // srand(0);
     // 背景色
     // glClearColor(1.0, 1.0, 1.0, 0.0);
     glClearColor(0.8, 0.8, 0.8, 0.0);

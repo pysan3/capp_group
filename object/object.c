@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #ifndef M_PI
 	#define M_PI 3.14159265358979323846
@@ -158,4 +159,11 @@ void put_character(Character c,Coordinate *location){
 	draw_character(c);
 
 	glPopMatrix();
+}
+
+void draw_string(const char string[], Coordinate *location) {
+	glRasterPos3f(location->x-strlen(string)/4.0, location->y+PLAYER_HEIGHT*4, location->z);
+	while (*string != '\0') {
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
+	}
 }

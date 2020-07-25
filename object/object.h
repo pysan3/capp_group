@@ -22,3 +22,5 @@ void draw_wall(Coordinate *location);
 //引数cがキャラクターの種類
 //引数locationがキャラクターの座標
 void put_character(Character c,Coordinate *location);
+
+void draw_string(const char string[], Coordinate *location);

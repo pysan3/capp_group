@@ -12,6 +12,7 @@
 #ifndef MYSERVER
 	#define MYSERVER "ws://freeroomfinder.herokuapp.com/ws/cappgroup"
 #else
+	#undef MYSERVER
 	#define MYSERVER "ws://127.0.0.1:5042/ws/cappgroup"
 #endif
 
