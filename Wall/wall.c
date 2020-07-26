@@ -27,6 +27,14 @@ void wall_corner(int i, Coordinate corner[]){
     corner[3].z = (walls[i]->location.z+4)*sin(walls[i]->location.rotate);
 }
 
+void wall_hitPlace(Wall *w, Coordinate corner[]) {
+    double height = 2, width = 4;
+    for (int i=0; i<4; i++) {
+        corner[i].z = w->location.z+cos(w->location.rotate)*width*(i<2?1:-1)+sin(w->location.rotate)*height*(i==1||i==2?1:-1);
+        corner[i].x = w->location.x+cos(w->location.rotate)*height*(i==0?1:-1)+sin(w->location.rotate)*width*(i<2?1:-1);
+    }
+}
+
 void updata_wall(int player_id){
     Wall *new_wall = NULL;
     while((new_wall = ws_getNewWall(player_id)) != NULL){
@@ -37,16 +45,20 @@ void updata_wall(int player_id){
 
     for(int i=wall_start;i<wall_count;i++){
         if (walls[i] == NULL) {
-        if (i == wall_start) wall_start++;
-        continue;
+            if (i == wall_start) wall_start++;
+            continue;
         }
         walls[i]->remain -= *isUpdated;
         if(walls[i]->remain<=0) {
             walls[i] = NULL;
             continue;
         }
-        wall_corner(i, c);
-        bullet_hit(c);
+        // wall_corner(i, c);
+        wall_hitPlace(walls[i], c);
+        double damage = bullet_hit(c);
+        if (damage) {
+            printf("wall: damaged\n");
+        }
         draw_wall(&walls[i]->location);
     }
 }
