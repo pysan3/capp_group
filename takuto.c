@@ -152,8 +152,8 @@ void game_init(void) {
     do {
         printf("You want to play [0: offline, 1: online]? ");
         // TODO: testing
-        scanf("%d", &user_input);
-        // user_input = 0;
+        // scanf("%d", &user_input);
+        user_input = 1;
     } while (user_input != 0 && user_input != 1);
     if (user_input == 1) {
         printf("Enter GameID: [-1 to create new] ");

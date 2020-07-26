@@ -32,7 +32,7 @@ add_library(websocket SHARED ${websocket_files})
 target_include_directories(websocket PRIVATE websocket/)
 target_link_libraries(websocket PRIVATE ws_api)
 target_compile_options(websocket PRIVATE -Wno-incompatible-pointer-types -Wno-stringop-truncation)
-# target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
+target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
 
 FILE(GLOB fps_files fpsControl/*.c)
 add_library(fps SHARED ${fps_files})
@@ -83,8 +83,8 @@ target_link_libraries(characterchange PRIVATE ${LIBRARIES} player)
 target_include_directories(characterchange PRIVATE characterchange/)
 target_include_directories(characterchange PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(main main.c)
-# add_executable(main takuto.c)
+# add_executable(main main.c)
+add_executable(main takuto.c)
 target_link_libraries(main PRIVATE characters texture fps object websocket player Wall Bullet characterchange)
 target_link_libraries(main PRIVATE ${LIBRARIES} pthread)
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
