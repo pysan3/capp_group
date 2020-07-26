@@ -34,11 +34,14 @@ void draw_ground(void){
 
 }
 void draw_snowman(Coordinate *location){
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, color[WHITE]);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, color[skyGRAY]);
+	glMaterialfv(GL_FRONT, GL_SPECULAR,color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
     glTranslatef(location->x,location->y,location->z);
 	glRotatef(location->rotate * 180 / M_PI,0,1,0);
+	glScalef(PLAYER_HEIGHT, PLAYER_HEIGHT, PLAYER_HEIGHT);
 	glTranslatef(0,1,0);
     glutSolidSphere(1.0,30,30);
     glTranslatef(0,1.5,0);

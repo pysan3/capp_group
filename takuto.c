@@ -93,22 +93,27 @@ void display(void) {
     update_bullets(f_info->me->id);
     update_player();
     if (update_player() == EXIT_FAILURE) {
-        printf("you lose\n");
-        exit(EXIT_SUCCESS);
+        // printf("you lose\n");
+        // exit(EXIT_SUCCESS);
     }
+    glPushMatrix();
+    // glScalef(PLAYER_HEIGHT, PLAYER_HEIGHT, PLAYER_HEIGHT);
+    Coordinate c = {50, 0, 50, f_info->elapsed_time / 30};
+    draw_snowman(&c);
+    glPopMatrix();
     int enemies_hp = 0;
     for (int i=0; i<ENEMY_NUM; i++) {
         put_character(f_info->enemies[i]->c, &f_info->enemies[i]->location);
         draw_string(f_info->enemies[i]->name, &f_info->enemies[i]->location);
         enemies_hp += f_info->enemies[i]->hp > 0;
     }
-    if (!enemies_hp) {
-        printf("you won\n");
-        exit(0);
-    } else if (f_info->elapsed_time > 60 * FPS) {
-        printf("draw\n");
-        exit(0);
-    }
+    // if (!enemies_hp) {
+    //     printf("you won\n");
+    //     exit(0);
+    // } else if (f_info->elapsed_time > 60 * FPS) {
+    //     printf("draw\n");
+    //     exit(0);
+    // }
     updata_wall(f_info->me->id);
 
     print_axes();
@@ -139,7 +144,7 @@ void update_offline_enemy(int *index) {
         if (update_enemy_offline(enemy_id) == EXIT_FAILURE) { // dead
             printf("enemy: %s is dead\n", e->name);
             // ws_dead(enemy_id);
-            break;
+            // break;
         }
         usleep(MICRO / FPS / 2);
     }
@@ -152,8 +157,8 @@ void game_init(void) {
     do {
         printf("You want to play [0: offline, 1: online]? ");
         // TODO: testing
-        scanf("%d", &user_input);
-        // user_input = 0;
+        // scanf("%d", &user_input);
+        user_input = 0;
     } while (user_input != 0 && user_input != 1);
     if (user_input == 1) {
         printf("Enter GameID: [-1 to create new] ");
