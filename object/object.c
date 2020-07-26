@@ -8,40 +8,21 @@
 	#define M_PI 3.14159265358979323846
 #endif
 
-enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK };
+enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK ,skyGRAY};
 GLfloat color[][4] = {
 	{ 1.0, 1.0, 1.0, 1.0 },
 	{ 0.5, 0.4, 0.35, 1.0 },
 	{ 0.99, 0.6, 0.4, 1.0 },
-	{ 0.8, 0.8, 0.8, 1.0 },
-	{ 0.0, 0.0, 0.0, 1.0 }
+	{ 0.78, 0.98, 1.0, 1.0 },
+	{ 0.0, 0.0, 0.0, 1.0 },
+	{0.2, 0.2, 0.25, 0.7}
 };
 
-void calcNormal(GLdouble v0[3], GLdouble v1[3], GLdouble v2[3], GLdouble n[3])
-{
-	GLdouble v2v[2][3];
-	GLdouble vt[3];
-	double abs;
-	int i;
-	for (i = 0; i < 3; i++)
-	{
-		v2v[0][i] = v1[i] - v0[i];
-		v2v[1][i] = v2[i] - v0[i];
-	}
-	vt[0] = v2v[0][1] * v2v[1][2] - v2v[0][2] * v2v[1][1];
-	vt[1] = v2v[0][2] * v2v[1][0] - v2v[0][0] * v2v[1][2];
-	vt[2] = v2v[0][0] * v2v[1][1] - v2v[0][1] * v2v[1][0];
-	abs = sqrt(vt[0] * vt[0] + vt[1] * vt[1] + vt[2] * vt[2]);
-	for (i = 0; i < 3; i++)
-		n[i] = vt[i] / abs;
-}
-
 void draw_ground(void){
-    int i, j;
 	glPushMatrix();
 	// glScalef(FIELD_MAX_X, FIELD_MAX_Y, FIELD_MAX_Z);
 	glBegin(GL_QUADS);
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[GRAY]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
 	//glTranslatef(FIELD_MAX_X/2,0,FIELD_MAX_Z/2);
 	glVertex3d(0,0,0);
@@ -92,7 +73,9 @@ void draw_snowman(Coordinate *location){
 }
 
 void draw_bullet(Coordinate *location){
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, color[WHITE]);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, color[skyGRAY]);
+	glMaterialfv(GL_FRONT, GL_SPECULAR,color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
     glTranslatef(location->x,2,location->z);
@@ -102,7 +85,8 @@ void draw_bullet(Coordinate *location){
 
 
 void draw_wall(Coordinate *location){
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[GRAY]);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color[WHITE]);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, color[skyGRAY]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
 	glTranslatef(location->x,location->y,location->z);
@@ -136,4 +120,29 @@ void draw_string(const char string[], Coordinate *location) {
 	while (*string != '\0') {
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
 	}
+}
+
+void draw_string2(const char string[], Coordinate *location) {
+	glPushMatrix();
+	glTranslatef(location->x,location->y,0);
+	glScalef(0.05f,0.05f,0.05f);
+	while (*string != '\0') {
+		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, *string++);
+	}
+	glPopMatrix();
+}
+
+void draw_introdutcion(void){
+	Coordinate introduction={10,18,10,0};
+	draw_string2("  w",&introduction);
+	introduction.y=16.5;
+	draw_string2(" ^",&introduction);
+	introduction.y=12;
+	introduction.x=4.5;
+	draw_string2("a<",&introduction);
+	introduction.x=21;
+	draw_string2(">d",&introduction);
+	introduction.x=10;
+	introduction.y=6;
+	draw_string2("sv ",&introduction);
 }

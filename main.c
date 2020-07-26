@@ -32,12 +32,12 @@ void print_axes(void) {
     glPushMatrix();
     glLineWidth(3.0);
     glBegin(GL_LINES);
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, black);
     glVertex3f(FIELD_MAX_X, 0, 0);
     glVertex3f(0, 0, 0);
     glVertex3f(FIELD_MAX_X, 0, FIELD_MAX_Z);
     glVertex3f(0, 0, FIELD_MAX_Z);
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
     glVertex3f(0, FIELD_MAX_Y, 0);
     glVertex3f(0, 0, 0);
     glVertex3f(FIELD_MAX_X, FIELD_MAX_Y, 0);
@@ -112,6 +112,8 @@ void display(void) {
     updata_wall(f_info->me->id);
 
     print_axes();
+
+    draw_introdutcion();
 
     glPopMatrix();
 
@@ -204,7 +206,7 @@ void init(void) {
     // srand(0);
     // 背景色
     // glClearColor(1.0, 1.0, 1.0, 0.0);
-    glClearColor(0.8, 0.8, 0.8, 0.0);
+    glClearColor(0.8, 0.8, 0.85, 0.0);
     // 隠面除去
     glEnable(GL_DEPTH_TEST);
     // 背面除去
