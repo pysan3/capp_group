@@ -8,14 +8,16 @@
 	#define M_PI 3.14159265358979323846
 #endif
 
-enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK ,skyGRAY};
+enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK ,skyGRAY, darkGRAY,WHITEs};
 GLfloat color[][4] = {
 	{ 1.0, 1.0, 1.0, 1.0 },
 	{ 0.5, 0.4, 0.35, 1.0 },
 	{ 0.99, 0.6, 0.4, 1.0 },
 	{ 0.78, 0.98, 1.0, 1.0 },
 	{ 0.0, 0.0, 0.0, 1.0 },
-	{0.2, 0.2, 0.25, 0.7}
+	{0.2, 0.2, 0.25, 0.7},
+	{0.6, 0.6, 0.6, 0.4},
+	{1.0, 1.0, 1.0, 0.4}
 };
 
 void draw_ground(void){
@@ -33,6 +35,41 @@ void draw_ground(void){
 	glPopMatrix();
 
 }
+
+void draw_outside(void){
+	glPushMatrix();
+	glBegin(GL_QUADS);
+	for(int i=0;i<25;i++){
+		if(i%2==0){
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[darkGRAY]);
+		}else{
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[WHITEs]);
+		}
+		glVertex3d(5*i-3,0,-5);
+		glVertex3d(5*i-3,0,0);
+		glVertex3d(5*i+2,0,0);
+		glVertex3d(5*i+2,0,-5);
+	}
+	for(int j=0;j<21;j++){
+		if(j%2==0){
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[WHITEs]);
+		}else{
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[darkGRAY]);
+		}
+		glVertex3d(-3,0,5*j);
+		glVertex3d(-3,0,5*(j+1));
+		glVertex3d(0,0,5*(j+1));
+		glVertex3d(0,0,5*j);
+
+		glVertex3d(FIELD_MAX_X,0,5*j);
+		glVertex3d(FIELD_MAX_X,0,5*(j+1));
+		glVertex3d(FIELD_MAX_X+4,0,5*(j+1));
+		glVertex3d(FIELD_MAX_X+4,0,5*j);
+	}
+	glPopMatrix();
+}
+
+
 void draw_snowman(Coordinate *location){
     glMaterialfv(GL_FRONT, GL_DIFFUSE, color[WHITE]);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, color[skyGRAY]);
