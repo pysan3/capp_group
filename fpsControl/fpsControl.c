@@ -34,7 +34,7 @@ int fps_elapsed(void) {
         if (*fps_info->isUpdated != 1)
         printf("fps: %lf\n", FPS / *fps_info->isUpdated);
     } else {
-        usleep(MICRO / FPS / 2);
+//        usleep(MICRO / FPS / 2);
     }
     return *fps_info->isUpdated;
 }

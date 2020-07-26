@@ -112,6 +112,8 @@ void display(void) {
 
     print_axes();
 
+    draw_introdutcion();
+
     glPopMatrix();
 
     // 描画盤面を入れ替える

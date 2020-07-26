@@ -167,3 +167,27 @@ void draw_string(const char string[], Coordinate *location) {
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
 	}
 }
+
+void draw_string2(const char string[], Coordinate *location) {
+	glRasterPos3f(location->x-strlen(string)/4.0, location->y+PLAYER_HEIGHT*4, location->z);
+	while (*string != '\0') {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *string++);
+	}
+}
+
+void draw_introdutcion(void){
+	Coordinate introduction={12,5,10,0};
+	introduction.x+=2.5;
+	draw_string2("w",&introduction);
+	introduction.y--;
+	introduction.x-=1.2;
+	draw_string2("^",&introduction);
+	introduction.y-=3;
+	introduction.x-=4;
+	draw_string2("a<",&introduction);
+	introduction.x+=7.5;
+	draw_string2(">d",&introduction);
+	introduction.y-=3;
+	introduction.x-=4;
+	draw_string2("vs",&introduction);
+}

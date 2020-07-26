@@ -24,3 +24,7 @@ void draw_wall(Coordinate *location);
 void put_character(Character c,Coordinate *location);
 
 void draw_string(const char string[], Coordinate *location);
+
+void draw_string2(const char string[], Coordinate *location);
+
+void draw_introdutcion(void);
