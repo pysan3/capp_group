@@ -8,13 +8,14 @@
 	#define M_PI 3.14159265358979323846
 #endif
 
-enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK };
+enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK ,skyGRAY};
 GLfloat color[][4] = {
 	{ 1.0, 1.0, 1.0, 1.0 },
 	{ 0.5, 0.4, 0.35, 1.0 },
 	{ 0.99, 0.6, 0.4, 1.0 },
-	{ 0.8, 0.8, 0.8, 1.0 },
-	{ 0.0, 0.0, 0.0, 1.0 }
+	{ 0.78, 0.98, 1.0, 1.0 },
+	{ 0.0, 0.0, 0.0, 1.0 },
+	{0.2, 0.2, 0.25, 0.7}
 };
 
 void calcNormal(GLdouble v0[3], GLdouble v1[3], GLdouble v2[3], GLdouble n[3])
@@ -37,11 +38,11 @@ void calcNormal(GLdouble v0[3], GLdouble v1[3], GLdouble v2[3], GLdouble n[3])
 }
 
 void draw_ground(void){
-    int i, j;
+	
 	glPushMatrix();
 	// glScalef(FIELD_MAX_X, FIELD_MAX_Y, FIELD_MAX_Z);
 	glBegin(GL_QUADS);
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[GRAY]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
 	//glTranslatef(FIELD_MAX_X/2,0,FIELD_MAX_Z/2);
 	glVertex3d(0,0,0);
@@ -92,7 +93,9 @@ void draw_snowman(Coordinate *location){
 }
 
 void draw_bullet(Coordinate *location){
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, color[WHITE]);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, color[skyGRAY]);
+	glMaterialfv(GL_FRONT, GL_SPECULAR,color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
     glTranslatef(location->x,2,location->z);
@@ -102,7 +105,8 @@ void draw_bullet(Coordinate *location){
 
 
 void draw_wall(Coordinate *location){
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[GRAY]);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color[WHITE]);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, color[skyGRAY]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
 	glTranslatef(location->x,location->y,location->z);
