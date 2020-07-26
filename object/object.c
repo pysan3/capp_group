@@ -18,9 +18,7 @@ GLfloat color[][4] = {
 	{0.2, 0.2, 0.25, 0.7}
 };
 
-
 void draw_ground(void){
-	
 	glPushMatrix();
 	// glScalef(FIELD_MAX_X, FIELD_MAX_Y, FIELD_MAX_Z);
 	glBegin(GL_QUADS);
@@ -122,4 +120,29 @@ void draw_string(const char string[], Coordinate *location) {
 	while (*string != '\0') {
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
 	}
+}
+
+void draw_string2(const char string[], Coordinate *location) {
+	glPushMatrix();
+	glTranslatef(location->x,location->y,0);
+	glScalef(0.05f,0.05f,0.05f);
+	while (*string != '\0') {
+		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, *string++);
+	}
+	glPopMatrix();
+}
+
+void draw_introdutcion(void){
+	Coordinate introduction={10,18,10,0};
+	draw_string2("  w",&introduction);
+	introduction.y=16.5;
+	draw_string2(" ^",&introduction);
+	introduction.y=12;
+	introduction.x=4.5;
+	draw_string2("a<",&introduction);
+	introduction.x=21;
+	draw_string2(">d",&introduction);
+	introduction.x=10;
+	introduction.y=6;
+	draw_string2("sv ",&introduction);
 }
