@@ -233,16 +233,10 @@ void player_cannon(Player *c){
 
 void player_hitPlace(Player *p, Coordinate c[], double radius) {
 	int angle = 1;
-	GLfloat white_[] = {1,1,1,1};
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white_);
-    glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
-	glBegin(GL_LINE_STRIP);
 	for (int i=0; i<4; i++, angle += 2) {
 		c[i].x = p->location.x + cos(angle / 4.0 * M_PI) * radius;
 		c[i].z = p->location.z + sin(angle / 4.0 * M_PI) * radius;
-		glVertex3d(c[i].x, 5, c[i].z);
 	}
-	glEnd();
 }
 
 void update_snowman(Player *p) {

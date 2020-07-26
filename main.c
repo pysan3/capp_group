@@ -51,28 +51,28 @@ void print_axes(void) {
     glPopMatrix();
 }
 
-void scene(void) {
-    glPushMatrix();
+// void scene(void) {
+//     glPushMatrix();
 
-    /* 法線マップのマッピング開始 */
-    glEnable(GL_TEXTURE_2D);
+//     /* 法線マップのマッピング開始 */
+//     glEnable(GL_TEXTURE_2D);
 
-    /* 正規化マップのマッピング開始 */
-    glActiveTexture(GL_TEXTURE1);
-    glEnable(GL_TEXTURE_CUBE_MAP);
+//     /* 正規化マップのマッピング開始 */
+//     glActiveTexture(GL_TEXTURE1);
+//     glEnable(GL_TEXTURE_CUBE_MAP);
 
-    /* 矩形を描く */
-    rectangle(FIELD_MAX_X, FIELD_MAX_Z, pos1);
+//     /* 矩形を描く */
+//     rectangle(FIELD_MAX_X, FIELD_MAX_Z, pos1);
 
-    /* 正規化マップのマッピング終了 */
-    glDisable(GL_TEXTURE_CUBE_MAP);
+//     /* 正規化マップのマッピング終了 */
+//     glDisable(GL_TEXTURE_CUBE_MAP);
 
-    /* 法線マップのマッピング終了 */
-    glActiveTexture(GL_TEXTURE0);
-    glDisable(GL_TEXTURE_2D);
+//     /* 法線マップのマッピング終了 */
+//     glActiveTexture(GL_TEXTURE0);
+//     glDisable(GL_TEXTURE_2D);
 
-    glPopMatrix();
-}
+//     glPopMatrix();
+// }
 
 FieldInfo *f_info;
 typedef struct {
@@ -100,10 +100,6 @@ void display(void) {
         put_character(f_info->enemies[i]->c, &f_info->enemies[i]->location);
         draw_string(f_info->enemies[i]->name, &f_info->enemies[i]->location);
         enemies_hp += f_info->enemies[i]->hp > 0;
-        // 当たり判定の枠を表示
-        // TODO: ここ消す
-        Coordinate c[4];
-        player_hitPlace(f_info->enemies[i], c, 3);
     }
     if (!enemies_hp) {
         printf("you won\n");
@@ -121,7 +117,7 @@ void display(void) {
     // 描画盤面を入れ替える
     glutSwapBuffers();
 
-    glFinish();
+    glFlush();
 }
 
 void update_offline_enemy(int *index) {
@@ -224,7 +220,7 @@ void init(void) {
     glLightfv(GL_LIGHT0, GL_SPECULAR, white);
     glMaterialf(GL_FRONT, GL_SHININESS, 80);
 
-    texture_init();
+    // texture_init();
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
