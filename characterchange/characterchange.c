@@ -17,8 +17,8 @@ void cc_makeme(FieldInfo *f_info){
     printf("----------------------------------------------\n");
     printf("Input your name: ");
     // TODO: testing
-    // scanf("%s", myname);
-    strcpy(myname, "test player");
+    scanf("%s", myname);
+    // strcpy(myname, "test player");
     myname[99] = '\0';
     printf("Your name is %s\n",myname);
     printf("----------------------------------------------\n");
@@ -37,8 +37,8 @@ void cc_makeme(FieldInfo *f_info){
     while(cnum<0 || cnum>3){
         printf("Input character number: ");
         // TODO: testing
-        // scanf("%d",&cnum);
-        cnum = 0;
+        scanf("%d",&cnum);
+        // cnum = 0;
         if(cnum>-1&&cnum<4){
             break;
         }
