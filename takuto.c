@@ -134,7 +134,7 @@ void update_offline_enemy(int *index) {
     char name[100];
     sprintf(name, "enemy%d", enemy_id);
     Player *e = (Player *)malloc(sizeof(Player));
-    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, rand() % 4);
+    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, RILAKKUMA);
     tid = ws_createPlayer(e, &e->id);
     pthread_join(tid, NULL);
     printf("enemy %d, id: %d, hp: %d\n", enemy_id, e->id, e->hp);
