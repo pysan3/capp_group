@@ -11,7 +11,7 @@ int isOnline;
 int *isUpdated;
 
 int ws_createNewGameID(void) {
-    printf("websocket: connecting to server for new gameID\n");
+    // printf("websocket: connecting to server for new gameID\n");
     return multi_createNewGameID();
 }
 

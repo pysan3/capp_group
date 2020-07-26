@@ -234,11 +234,12 @@ void init(void) {
     f_info = (FieldInfo *)malloc(sizeof(FieldInfo));
     memset(f_info, 0, sizeof(FieldInfo));
     game_init();
-    fps_init(&f_info->elapsed_time, &f_info->isUpdated);
 
     glutKeyboardFunc(myKeyboardFunc);
 	glutKeyboardUpFunc(myKeyboardUpFunc);
 	glutMouseFunc(myMouseFunc);
+
+    fps_init(&f_info->elapsed_time, &f_info->isUpdated);
 
     glutIdleFunc(idle);
 }

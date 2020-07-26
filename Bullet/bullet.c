@@ -157,7 +157,7 @@ void bullet_throw(Bullet* start){
 void update_bullets(int player_id){
   Bullet* new_bullet = NULL;
   while((new_bullet = ws_getNewBullet(player_id)) != NULL){
-	printf("bullet(%d): (%lf,%lf,%lf)\n",bullet_sum,new_bullet->location.x,new_bullet->location.y,new_bullet->location.z);
+	// printf("bullet(%d): (%lf,%lf,%lf)\n",bullet_sum,new_bullet->location.x,new_bullet->location.y,new_bullet->location.z);
     bullets[bullet_sum] = new_bullet;
     bullet_sum++;
   }

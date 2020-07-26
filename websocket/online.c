@@ -29,12 +29,12 @@ typedef struct {
     pthread_mutex_t mut;
 } BulletList;
 void multi_bullet_append(BulletList *list, Bullet *b) {
-    pthread_mutex_lock(&list->mut);
     BulletNode *new = (BulletNode *)malloc(sizeof(BulletNode));
     new->b = b;
     new->created_at = *elapsed;
     new->next = NULL;
-    list->last->next = new;
+    pthread_mutex_lock(&list->mut);
+    if (list->last != NULL) list->last->next = new;
     list->last = new;
     if (list->first == NULL) list->first = new;
     pthread_mutex_unlock(&list->mut);
@@ -49,9 +49,9 @@ Bullet *multi_bullet_pop_front(BulletList *list) {
     if (new->next == NULL) list->last = NULL;
     pthread_mutex_unlock(&list->mut);
     Bullet *b = new->b;
-    b->location.x = b->velocity.x * (*elapsed - new->created_at);
-    b->location.y = b->velocity.y * (*elapsed - new->created_at);
-    b->location.z = b->velocity.z * (*elapsed - new->created_at);
+    // b->location.x = b->velocity.x * (*elapsed - new->created_at);
+    // b->location.y = b->velocity.y * (*elapsed - new->created_at);
+    // b->location.z = b->velocity.z * (*elapsed - new->created_at);
     free(new);
     return b;
 }
@@ -66,12 +66,12 @@ typedef struct {
     pthread_mutex_t mut;
 } WallList;
 void multi_wall_append(WallList *list, Wall *w) {
-    pthread_mutex_lock(&list->mut);
     WallNode *new = (WallNode *)malloc(sizeof(WallNode));
     new->w = w;
     new->created_at = *elapsed;
     new->next = NULL;
-    list->last->next = new;
+    pthread_mutex_lock(&list->mut);
+    if (list->last != NULL) list->last->next = new;
     list->last = new;
     if (list->first == NULL) list->first = new;
     pthread_mutex_unlock(&list->mut);
@@ -87,7 +87,7 @@ Wall *multi_wall_pop_front(WallList *list) {
     if (new->next == NULL) list->last = NULL;
     pthread_mutex_unlock(&list->mut);
     Wall *w = new->w;
-    w->remain -= *elapsed - new->created_at;
+    // w->remain -= *elapsed - new->created_at;
     free(new);
     return w;
 }
@@ -119,7 +119,7 @@ int onerror(wsclient *c, wsclient_error *err) {
 
 int onmessage(wsclient *c, wsclient_message *msg) {
 	int isError = 0;
-	fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
+	// fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
 	json_t mem[5000];
 	json_t const *json = json_create(msg->payload, mem, sizeof(mem)/sizeof(mem[0]));
 	if (!json) {
@@ -134,10 +134,10 @@ int onmessage(wsclient *c, wsclient_message *msg) {
 		} else isError = 1;
 	} else if (strcmp(name, "newBullet") == 0) {
 		Bullet *b = (Bullet *)malloc(sizeof(Bullet));
-		multi_bullet_append(&arrivals.bulletlist, Bullet_json(json_getPropertyValue(json, "data"), b));
+		multi_bullet_append(&arrivals.bulletlist, Bullet_json(json_getProperty(json, "data"), b));
 	} else if (strcmp(name, "newWall") == 0) {
 		Wall *w = (Wall *)malloc(sizeof(Wall));
-		multi_wall_append(&arrivals.walllist, Wall_json(json_getPropertyValue(json, "data"), w));
+		multi_wall_append(&arrivals.walllist, Wall_json(json_getProperty(json, "data"), w));
 	} else if (strcmp(name, "updateEnemies") == 0) {
 		if (arrivals.enemies == NULL) arrivals.enemies = (Player **)malloc(sizeof(Player *) * ENEMY_NUM);
 		Player **e = &arrivals.enemies[0];
@@ -161,13 +161,13 @@ int onmessage(wsclient *c, wsclient_message *msg) {
 }
 
 int onopen(wsclient *c) {
-	fprintf(stderr, "onopen called: %d\n", c->sockfd);
+	// fprintf(stderr, "onopen called: %d\n", c->sockfd);
 	return 0;
 }
 
 int receiveNewGameID(wsclient *c, wsclient_message *msg) {
 	json_t mem[32];
-	fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
+	// fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
 	json_t const *json = json_create(msg->payload, mem, sizeof(mem)/sizeof(mem[0]));
 	if (!json) {
 		printf("newGameID: Error while creating json\n");
@@ -183,7 +183,7 @@ int receiveNewGameID(wsclient *c, wsclient_message *msg) {
 }
 int multi_createNewGameID(void) {
 	arrivals.gameID = 0;
-	printf("%s\n", MYSERVER);
+	// printf("%s\n", MYSERVER);
 	wsclient *myclient = libwsclient_new(MYSERVER);
 	if (!myclient) {
 		fprintf(stderr, "ERROR: unable to connect with ther server for new gameID\n");
@@ -223,7 +223,7 @@ int multi_init(int id, int *time) {
 	char resp[64], data[64];
 	sprintf(data, "\"gameID\":%d,", arrivals.gameID);
 	data_to_json(resp, "login", data, NULL);
-	printf("init: %s\n", resp);
+	// printf("init: %s\n", resp);
 	libwsclient_send(client, resp);
 	return (arrivals.gameID == id) - 1;
 }
@@ -238,7 +238,7 @@ void multi_createPlayer_th(threatPlayer *tp) {
 	char resp[1000], data[1000];
 	json_Player(data, "player", tp->p);
 	data_to_json(resp, "createPlayer", data, NULL);
-	printf("createPlayer: %s\n", resp);
+	// printf("createPlayer: %s\n", resp);
 	libwsclient_send(client, resp);
 	while (arrivals.playerID == NULL) sleep(1);
 	*tp->id = *arrivals.playerID;
@@ -250,26 +250,24 @@ void multi_sendPlayer_th(Player *p) {
 	char resp[1000], data[1000];
 	json_Player(data, "player", p);
 	data_to_json(resp, "updatePlayer", data, NULL);
-	printf("sendPlayer: %s\n", resp);
+	// printf("sendPlayer: %s\n", resp);
 	libwsclient_send(client, resp);
 }
 
 void multi_sendNewBullet_th(playersBullet *pb) {
-	char resp[1000], data[1000], id[1000];
-	json_playerID(id, pb->player_id);
+	char resp[1000], data[1000];
 	json_Bullet(data, "bullet", pb->b);
-	data_to_json(resp, "newBullet", id, data, NULL);
-	printf("newBullet: %s\n", resp);
+	data_to_json(resp, "newBullet", data, NULL);
+	// printf("newBullet: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(pb);
 }
 
 void multi_sendNewWall_th(playersWall *pw) {
-	char resp[1000], data[1000], id[1000];
-	json_playerID(id, pw->player_id);
+	char resp[1000], data[1000];
 	json_Wall(data, "wall", pw->w);
-	data_to_json(resp, "newWall", id, data, NULL);
-	printf("newWall: %s\n", resp);
+	data_to_json(resp, "newWall", data, NULL);
+	// printf("newWall: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(pw);
 }
@@ -311,7 +309,7 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
 	long time_wait = (arrivals.start_from->tv_sec - current_time.tv_sec) * MICRO + (arrivals.start_from->tv_usec - current_time.tv_usec);
-	printf("%ld\n", time_wait);
+	printf("Game starting in %lf sec\n", (double)time_wait / MICRO);
     if (time_wait < 0) {
         fprintf(stderr, "not good connection with the server\n");
         exit(EXIT_FAILURE);
@@ -323,7 +321,7 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
 void multi_dead_th(threatPlayer *tp) {
 	char resp[1000];
 	data_to_json(resp, "dead", NULL);
-	printf("dead: %s\n", resp);
+	// printf("dead: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(tp);
 }

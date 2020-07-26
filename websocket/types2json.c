@@ -6,30 +6,23 @@
 #include <stdarg.h>
 
 char *json_playerID(char *buf, int player_id) {
-    buf = json_objOpen(buf, NULL);
-    buf = json_int(buf, "player_id", player_id);
-    return json_objClose(buf);
-}
-
-char *json_data(char *buf, char const *name, const char *args, ...) {
-	buf = json_objOpen(buf, NULL);
-	buf = json_str(buf, "name", name);
-    va_list ap;
-    va_start(ap, args);
-    for (const char *arg = args; arg != NULL; arg = va_arg(ap, const char *)) {
-        int data_length = strlen(arg);
-        strncpy(buf, arg, data_length);
-        buf += data_length - 1;
-    }
-	return json_objClose(buf);
+    return json_int(buf, "player_id", player_id);
 }
 
 int data_to_json(char *buf, char const *name, const char *args, ...) {
     va_list ap;
+    char *p = buf;
     va_start(ap, args);
-	char *p = json_data(buf, name, args, ap);
-	p = json_end(p);
-	return p - buf;
+	buf = json_objOpen(buf, NULL);
+	buf = json_str(buf, "name", name);
+    for (const char *arg = args; arg != NULL; arg = va_arg(ap, const char *)) {
+        int data_length = strlen(arg);
+        strncpy(buf, arg, data_length);
+        buf += data_length;
+    }
+	buf = json_objClose(buf - 1);
+	buf = json_end(buf);
+	return buf - p;
 }
 
 char *json_Coordinate(char *buf, char const *dataname, const Coordinate *c) {
@@ -74,12 +67,10 @@ int bullet2json(char *buf, char const *name, const char *dataname, const Bullet 
 }
 
 char *json_Wall(char *buf, char const *dataname, const Wall *w) {
-    printf("create wall\n");
     buf = json_objOpen(buf, dataname);
     buf = json_Coordinate(buf, "location", &w->location);
     buf = json_int(buf, "remain", w->remain);
     buf = json_int(buf, "player_id", w->player_id);
-    printf("end translating\n");
     return json_objClose(buf);
 }
 

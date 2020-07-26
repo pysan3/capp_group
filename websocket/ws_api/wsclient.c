@@ -146,7 +146,7 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 	memcpy(mask, &mask_int, 4);
 	pthread_mutex_lock(&c->lock);
 
-	printf("opcode: %x\n", ctl_frame->opcode);
+	// printf("opcode: %x\n", ctl_frame->opcode);
 	switch(ctl_frame->opcode) {
 		case 0x8:
 			//close frame

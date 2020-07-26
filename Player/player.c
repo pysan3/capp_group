@@ -157,7 +157,6 @@ void myMouseFunc(int button,int state,int x,int y){//とりあえずタップ
 			(y - 146.0) / 574.0 * FIELD_MAX_Z,
 			0
 		};
-		printf("(%d, %d)\n", x, y);
 		player_make_bullet(fieldinfo->me, &c);
 	}
 }
