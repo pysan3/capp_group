@@ -146,7 +146,7 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 	memcpy(mask, &mask_int, 4);
 	pthread_mutex_lock(&c->lock);
 
-	// printf("opcode: %x\n", ctl_frame->opcode);
+	printf("opcode: %x\n", ctl_frame->opcode);
 	switch(ctl_frame->opcode) {
 		case 0x8:
 			//close frame
@@ -177,13 +177,15 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 		case 0x9:
 			// Received ping frame
 			if((c->flags & CLIENT_SHOULD_CLOSE) == 0) {
-				// set mask
+				// Server sent ping.  Send pong frame as acknowledgement.
+				*(ctl_frame->rawdata + 1) |= 0x80; //turn mask bit on
+				// mask payload, but shift 4 bytes to make place to set the masking-key
+				for (i = ctl_frame->payload_len - 1; i >= 0; i--) {
+					*(ctl_frame->rawdata + ctl_frame->payload_offset + i + 4) = *(ctl_frame->rawdata + ctl_frame->payload_offset + i) ^ (mask[i % 4] & 0xff);
+				}
+				// set masking-key
 				memcpy(ctl_frame->rawdata + ctl_frame->payload_offset, mask, 4);
 				ctl_frame->payload_offset += 4;
-				// Server sent ping.  Send pong frame as acknowledgement.
-				for(i=0;i<ctl_frame->payload_len;i++)
-					*(ctl_frame->rawdata + ctl_frame->payload_offset + i) ^= (mask[i % 4] & 0xff); //mask payload
-				*(ctl_frame->rawdata + 1) |= 0x80; //turn mask bit on
 				i = 0;
 				// change opcode to 0xA (Pong Frame)
 				*(ctl_frame->rawdata) = (*(ctl_frame->rawdata) & 0xf0) | 0xA;
@@ -219,7 +221,8 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 	memset(ctl_frame->rawdata, 0, FRAME_CHUNK_LENGTH);
 	pthread_mutex_unlock(&c->lock);
 }
-
+// 5d32848a 5d321527 1527 0 0 0 0 0 0 0
+// 1422848a fa2039d8 9a5b 0 0 0 0 0 0 0 
 inline void libwsclient_in_data(wsclient *c, char in) {
 	wsclient_frame *current = NULL, *new = NULL;
 	pthread_mutex_lock(&c->lock);
