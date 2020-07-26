@@ -173,11 +173,9 @@ void enemy_make_bullet(Player *p, Coordinate *direction, int iscp) {
 	Bullet *newBullet = (Bullet *)malloc(sizeof(Bullet));
 	copyCoordinate(&newBullet->location, &p->location);
 	copyCoordinate(&newBullet->velocity, &newDirection);
-	for (int i=0; i<8; i++) {
-		newBullet->location.x += newBullet->velocity.x;
-		newBullet->location.y += newBullet->velocity.y;
-		newBullet->location.z += newBullet->velocity.z;
-	}
+	newBullet->location.x += newBullet->velocity.x * 8;
+	newBullet->location.y += newBullet->velocity.y * 8;
+	newBullet->location.z += newBullet->velocity.z * 8;
 	newBullet->player_id = p->id;
 	newBullet->damage = BULLET_DAMAGE;
 	// printf("bullet(%lf,%lf,%lf)\n",newBullet->location.x,newBullet->location.y,newBullet->location.z);
