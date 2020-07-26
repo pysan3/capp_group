@@ -40,45 +40,15 @@ void draw_ground(void){
     int i, j;
 	glPushMatrix();
 	// glScalef(FIELD_MAX_X, FIELD_MAX_Y, FIELD_MAX_Z);
-	for (i = 0; i < 10; i++)
-		for (j = 0; j < 10; j++)
-		{
-		GLdouble v[5][3];
-		v[0][0] = (j + 0)*0.5 - 2.5;
-		v[0][1] = (i + 0)*0.5 - 2.5;
-		v[0][2] = 0;
-		v[1][0] = (j + 1)*0.5 - 2.5;
-		v[1][1] = (i + 0)*0.5 - 2.5;
-		v[1][2] = 0;
-		v[2][0] = (j + 1)*0.5 - 2.5;
-		v[2][1] = (i + 1)*0.5 - 2.5;
-		v[2][2] = 0;
-		v[3][0] = (j + 0)*0.5 - 2.5;
-		v[3][1] = (i + 1)*0.5 - 2.5;
-		v[3][2] = 0;
-		if ((i^j) & 1)
-		{
-			glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
-			glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLACK]);
-			glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
-			glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
-		}
-		else
-		{
-			glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
-			glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLACK]);
-			glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
-			glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
-		}
-		calcNormal(v[0], v[1], v[2], v[4]);
-		glNormal3dv(v[4]);
-		glBegin(GL_QUADS);
-		glVertex3dv(v[0]);
-		glVertex3dv(v[1]);
-		glVertex3dv(v[2]);
-		glVertex3dv(v[3]);
-		glEnd();
-		}
+	glBegin(GL_QUADS);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
+    glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
+	//glTranslatef(FIELD_MAX_X/2,0,FIELD_MAX_Z/2);
+	glVertex3d(0,0,0);
+	glVertex3d(0,0,FIELD_MAX_Z);
+	glVertex3d(FIELD_MAX_X,0,FIELD_MAX_Z);
+	glVertex3d(FIELD_MAX_X,0,0);
+	glEnd();
 	glPopMatrix();
 
 }
