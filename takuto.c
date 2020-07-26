@@ -51,28 +51,28 @@ void print_axes(void) {
     glPopMatrix();
 }
 
-void scene(void) {
-    glPushMatrix();
+// void scene(void) {
+//     glPushMatrix();
 
-    /* 法線マップのマッピング開始 */
-    glEnable(GL_TEXTURE_2D);
+//     /* 法線マップのマッピング開始 */
+//     glEnable(GL_TEXTURE_2D);
 
-    /* 正規化マップのマッピング開始 */
-    glActiveTexture(GL_TEXTURE1);
-    glEnable(GL_TEXTURE_CUBE_MAP);
+//     /* 正規化マップのマッピング開始 */
+//     glActiveTexture(GL_TEXTURE1);
+//     glEnable(GL_TEXTURE_CUBE_MAP);
 
-    /* 矩形を描く */
-    rectangle(FIELD_MAX_X, FIELD_MAX_Z, pos1);
+//     /* 矩形を描く */
+//     rectangle(FIELD_MAX_X, FIELD_MAX_Z, pos1);
 
-    /* 正規化マップのマッピング終了 */
-    glDisable(GL_TEXTURE_CUBE_MAP);
+//     /* 正規化マップのマッピング終了 */
+//     glDisable(GL_TEXTURE_CUBE_MAP);
 
-    /* 法線マップのマッピング終了 */
-    glActiveTexture(GL_TEXTURE0);
-    glDisable(GL_TEXTURE_2D);
+//     /* 法線マップのマッピング終了 */
+//     glActiveTexture(GL_TEXTURE0);
+//     glDisable(GL_TEXTURE_2D);
 
-    glPopMatrix();
-}
+//     glPopMatrix();
+// }
 
 FieldInfo *f_info;
 typedef struct {
@@ -88,6 +88,7 @@ void display(void) {
 
     // 地面の凹凸計算
     // scene();
+    // draw_ground();
 
     update_bullets(f_info->me->id);
     update_player();
@@ -117,7 +118,7 @@ void display(void) {
     // 描画盤面を入れ替える
     glutSwapBuffers();
 
-    glFinish();
+    glFlush();
 }
 
 void update_offline_enemy(int *index) {
@@ -126,7 +127,7 @@ void update_offline_enemy(int *index) {
     char name[100];
     sprintf(name, "enemy%d", enemy_id);
     Player *e = (Player *)malloc(sizeof(Player));
-    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, RILAKKUMA);
+    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, rand() % 4);
     tid = ws_createPlayer(e, &e->id);
     pthread_join(tid, NULL);
     printf("enemy %d, id: %d, hp: %d\n", enemy_id, e->id, e->hp);
@@ -149,13 +150,12 @@ void game_init(void) {
     do {
         printf("You want to play [0: offline, 1: online]? ");
         // TODO: testing
-        // scanf("%d", &user_input);
-        user_input = 1;
+        scanf("%d", &user_input);
+        // user_input = 0;
     } while (user_input != 0 && user_input != 1);
     if (user_input == 1) {
         printf("Enter GameID: [-1 to create new] ");
-        // scanf("%d", &user_input);
-        user_input = -1;
+        scanf("%d", &user_input);
         if (user_input == -1) {
             f_info->isOnline = ws_createNewGameID();
             printf("received a new gameID from server: %d\n", f_info->isOnline);
@@ -188,7 +188,6 @@ void game_init(void) {
 
     tid = ws_createPlayer(f_info->me, &f_info->me->id);
     pthread_join(tid, NULL);
-    printf("id: %d\n", f_info->me->id);
     tid = ws_loadEnemies(f_info->me->id, f_info->enemies);
     pthread_join(tid, NULL);
 }
@@ -222,7 +221,7 @@ void init(void) {
     glLightfv(GL_LIGHT0, GL_SPECULAR, white);
     glMaterialf(GL_FRONT, GL_SHININESS, 80);
 
-    texture_init();
+    // texture_init();
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -240,6 +239,8 @@ void init(void) {
     glutKeyboardFunc(myKeyboardFunc);
 	glutKeyboardUpFunc(myKeyboardUpFunc);
 	glutMouseFunc(myMouseFunc);
+
+    glutIdleFunc(idle);
 }
 
 int main(int argc, char *argv[]) {
@@ -250,7 +251,6 @@ int main(int argc, char *argv[]) {
     glutCreateWindow("Group A");
     init();
     glutDisplayFunc(display);
-    glutIdleFunc(idle);
     glutMainLoop();
 
     return 0;
