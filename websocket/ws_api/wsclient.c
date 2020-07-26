@@ -221,8 +221,7 @@ void libwsclient_handle_control_frame(wsclient *c, wsclient_frame *ctl_frame) {
 	memset(ctl_frame->rawdata, 0, FRAME_CHUNK_LENGTH);
 	pthread_mutex_unlock(&c->lock);
 }
-// 5d32848a 5d321527 1527 0 0 0 0 0 0 0
-// 1422848a fa2039d8 9a5b 0 0 0 0 0 0 0 
+
 inline void libwsclient_in_data(wsclient *c, char in) {
 	wsclient_frame *current = NULL, *new = NULL;
 	pthread_mutex_lock(&c->lock);
