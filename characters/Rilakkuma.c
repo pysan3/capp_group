@@ -212,7 +212,7 @@ void ktleg(void) {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, ktface);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ktblack);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, ktwhite);
-	glMaterialf(GL_FRONT, GL_SHININESS, 1000.0);
+	//glMaterialf(GL_FRONT, GL_SHININESS, 1000.0);
 	ktCylinder(2.0);
 	leg_inside();
 	glTranslatef(-3.4, 0.0, 0.0);
