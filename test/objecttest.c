@@ -39,7 +39,8 @@ void display(void) {
     // ここにdoraemonを追加した
     // draw_character(DORAEMON);
     Coordinate try = {0,0,0};
-    put_character(LOTSO,&try);
+    //put_character(LOTSO,&try);
+    draw_ground();
     print_axes();
     // 描画盤面を入れ替える
     glutSwapBuffers();

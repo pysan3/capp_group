@@ -88,6 +88,7 @@ void display(void) {
 
     // 地面の凹凸計算
     // scene();
+    draw_ground();
 
     update_bullets(f_info->me->id);
     update_player();
