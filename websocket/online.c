@@ -119,7 +119,7 @@ int onerror(wsclient *c, wsclient_error *err) {
 
 int onmessage(wsclient *c, wsclient_message *msg) {
 	int isError = 0;
-	// fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
+	fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
 	json_t mem[5000];
 	json_t const *json = json_create(msg->payload, mem, sizeof(mem)/sizeof(mem[0]));
 	if (!json) {
@@ -161,13 +161,13 @@ int onmessage(wsclient *c, wsclient_message *msg) {
 }
 
 int onopen(wsclient *c) {
-	// fprintf(stderr, "onopen called: %d\n", c->sockfd);
+	fprintf(stderr, "onopen called: %d\n", c->sockfd);
 	return 0;
 }
 
 int receiveNewGameID(wsclient *c, wsclient_message *msg) {
 	json_t mem[32];
-	// fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
+	fprintf(stderr, "onmessage: (%llu): %s\n", msg->payload_len, msg->payload);
 	json_t const *json = json_create(msg->payload, mem, sizeof(mem)/sizeof(mem[0]));
 	if (!json) {
 		printf("newGameID: Error while creating json\n");
@@ -183,7 +183,7 @@ int receiveNewGameID(wsclient *c, wsclient_message *msg) {
 }
 int multi_createNewGameID(void) {
 	arrivals.gameID = 0;
-	// printf("%s\n", MYSERVER);
+	printf("%s\n", MYSERVER);
 	wsclient *myclient = libwsclient_new(MYSERVER);
 	if (!myclient) {
 		fprintf(stderr, "ERROR: unable to connect with ther server for new gameID\n");
@@ -223,7 +223,7 @@ int multi_init(int id, int *time) {
 	char resp[64], data[64];
 	sprintf(data, "\"gameID\":%d,", arrivals.gameID);
 	data_to_json(resp, "login", data, NULL);
-	// printf("init: %s\n", resp);
+	printf("init: %s\n", resp);
 	libwsclient_send(client, resp);
 	return (arrivals.gameID == id) - 1;
 }
@@ -238,7 +238,7 @@ void multi_createPlayer_th(threatPlayer *tp) {
 	char resp[1000], data[1000];
 	json_Player(data, "player", tp->p);
 	data_to_json(resp, "createPlayer", data, NULL);
-	// printf("createPlayer: %s\n", resp);
+	printf("createPlayer: %s\n", resp);
 	libwsclient_send(client, resp);
 	while (arrivals.playerID == NULL) sleep(1);
 	*tp->id = *arrivals.playerID;
@@ -250,7 +250,7 @@ void multi_sendPlayer_th(Player *p) {
 	char resp[1000], data[1000];
 	json_Player(data, "player", p);
 	data_to_json(resp, "updatePlayer", data, NULL);
-	// printf("sendPlayer: %s\n", resp);
+	printf("sendPlayer: %s\n", resp);
 	libwsclient_send(client, resp);
 }
 
@@ -258,7 +258,7 @@ void multi_sendNewBullet_th(playersBullet *pb) {
 	char resp[1000], data[1000];
 	json_Bullet(data, "bullet", pb->b);
 	data_to_json(resp, "newBullet", data, NULL);
-	// printf("newBullet: %s\n", resp);
+	printf("newBullet: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(pb);
 }
@@ -267,7 +267,7 @@ void multi_sendNewWall_th(playersWall *pw) {
 	char resp[1000], data[1000];
 	json_Wall(data, "wall", pw->w);
 	data_to_json(resp, "newWall", data, NULL);
-	// printf("newWall: %s\n", resp);
+	printf("newWall: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(pw);
 }
@@ -321,7 +321,7 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
 void multi_dead_th(threatPlayer *tp) {
 	char resp[1000];
 	data_to_json(resp, "dead", NULL);
-	// printf("dead: %s\n", resp);
+	printf("dead: %s\n", resp);
 	libwsclient_send(client, resp);
 	free(tp);
 }
