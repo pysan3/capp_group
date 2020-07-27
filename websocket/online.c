@@ -298,19 +298,6 @@ Wall *multi_getNewWall(int player_id) {
 
 void multi_loadEnemies_th(threadLoadEnemy *le) {
 	while (arrivals.start_from == NULL) sleep(1);
-	while (1) {
-		int check = 0;
-		for (int i=0; i<ENEMY_NUM; i++) {
-			if (arrivals.enemies[i] == NULL) {
-				check = 1;
-				printf("still waiting\n");
-			}
-		}
-		if (!check) {
-			break;
-		}
-		sleep(1);
-	}
 	if (arrivals.enemies != NULL) {
 		for (int i=0; i<ENEMY_NUM; i++) {
 			le->e[i] = arrivals.enemies[i];
