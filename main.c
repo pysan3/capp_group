@@ -90,6 +90,7 @@ void display(void) {
     // scene();
     draw_ground();
     draw_outside();
+    put_snowmen();
 
     update_bullets(f_info->me->id);
     update_player();
