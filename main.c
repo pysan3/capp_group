@@ -190,6 +190,14 @@ void game_init(void) {
     // キャラ選択
     cc_makeme(f_info);
 
+    printf("----*How to PLAY*----------\n");
+    printf("        ^(W key)      \n");
+    printf("<(A key)      (D key)>\n");
+    printf("        V(S key)      \n");
+    printf("[    Make WALL   ] →　space key\n");
+    printf("[ Throw SnowBall ] →  Click\n");
+    printf("---------------------------\n");
+
     tid = ws_createPlayer(f_info->me, &f_info->me->id);
     pthread_join(tid, NULL);
     tid = ws_loadEnemies(f_info->me->id, f_info->enemies);
