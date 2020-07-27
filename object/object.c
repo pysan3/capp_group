@@ -76,6 +76,7 @@ void draw_snowman(Coordinate *location){
     glPushMatrix();
     glTranslatef(location->x,location->y,location->z);
 	glRotatef(location->rotate * 180 / M_PI,0,1,0);
+	glScalef(PLAYER_HEIGHT,PLAYER_HEIGHT,PLAYER_HEIGHT);
 	glTranslatef(0,1,0);
     glutSolidSphere(1.0,30,30);
     glTranslatef(0,1.5,0);
@@ -170,16 +171,44 @@ void draw_string2(const char string[], Coordinate *location) {
 }
 
 void draw_introdutcion(void){
-	Coordinate introduction={10,18,10,0};
+	Coordinate introduction={20,18,10,0};
 	draw_string2("  w",&introduction);
 	introduction.y=16.5;
 	draw_string2(" ^",&introduction);
 	introduction.y=12;
-	introduction.x=4.5;
+	introduction.x=14.5;
 	draw_string2("a<",&introduction);
-	introduction.x=21;
+	introduction.x=31;
 	draw_string2(">d",&introduction);
-	introduction.x=10;
+	introduction.x=20;
 	introduction.y=6;
 	draw_string2("sv ",&introduction);
+}
+
+void put_snowmen(void){
+	int i;
+    Coordinate *c = (Coordinate *)malloc(sizeof(Coordinate));
+	c->x = 10; c->y = 0; c->z = -10; c->rotate = M_PI;
+	draw_snowman(c);
+	draw_snowman(c);
+	for(i=0;i<3;i++){
+		c->x += 30;
+		draw_snowman(c);
+	}
+	c->x = -10;
+	c->z = 10;
+	c->rotate = 3*M_PI/2;
+	draw_snowman(c);
+	for(i=0; i<3; i++){
+		c->z += 30;
+		draw_snowman(c); 
+	}
+	c->x = FIELD_MAX_X + 10;
+	c->rotate = M_PI/2;
+	draw_snowman(c);
+	for(i=0; i<3; i++){
+		c->z -= 30;
+		draw_snowman(c); 
+	}
+	free(c);
 }
