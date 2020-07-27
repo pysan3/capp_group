@@ -103,6 +103,7 @@ void display(void) {
     for (int i=0; i<ENEMY_NUM; i++) {
         put_character(f_info->enemies[i]->c, &f_info->enemies[i]->location);
         draw_string(f_info->enemies[i]->name, &f_info->enemies[i]->location);
+        draw_hp(f_info->enemies[i]);
         enemies_hp += f_info->enemies[i]->hp > 0;
     }
     if (!enemies_hp) {

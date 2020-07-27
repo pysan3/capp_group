@@ -154,10 +154,29 @@ void put_character(Character c,Coordinate *location){
 }
 
 void draw_string(const char string[], Coordinate *location) {
-	glRasterPos3f(location->x-strlen(string)/4.0, location->y+PLAYER_HEIGHT*4, location->z);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[BLACK]);
+	glRasterPos3f(location->x-strlen(string)/4.0, location->y+PLAYER_HEIGHT*4+2, location->z);
 	while (*string != '\0') {
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
 	}
+}
+
+void draw_hp(Player *p) {
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[BLACK]);
+	glRasterPos3f(p->location.x-strlen(p->name)/4.0, p->location.y+PLAYER_HEIGHT*4-2, p->location.z);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'H');
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'P');
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ' ');
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '|');
+	for (int i=0; i<10; i++) {
+		if (p->hp / 10 >= i) {
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '-');
+		} else {
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ' ');
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ' ');
+		}
+	}
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '|');
 }
 
 void draw_string2(const char string[], Coordinate *location) {

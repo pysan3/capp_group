@@ -263,6 +263,7 @@ int update_player(){
 	ws_sendPlayer(me);
 	put_character(me->c,&me->location);
 	draw_string(me->name, &me->location);
+	draw_hp(me);
 	if (me->hp <= 0) {
 		return EXIT_FAILURE;
 	}

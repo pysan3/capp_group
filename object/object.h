@@ -30,6 +30,8 @@ void draw_string(const char string[], Coordinate *location);
 
 void draw_string2(const char string[], Coordinate *location);
 
+void draw_hp(Player *p);
+
 void draw_introdutcion(void);
 
 void put_snowmen(void);
