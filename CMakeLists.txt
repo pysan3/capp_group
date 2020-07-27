@@ -25,7 +25,7 @@ if (APPLE)
 else()
     target_link_libraries(ws_api PRIVATE pthread ssl)
 endif()
-target_link_libraries(ws_api PRIVATE pthread ssl)
+
 target_compile_options(ws_api PRIVATE -Wno-format-truncation -Wno-stringop-overflow -Wno-stringop-truncation -Wno-pointer-sign)
 FILE(GLOB websocket_files websocket/*.c)
 add_library(websocket SHARED ${websocket_files})
