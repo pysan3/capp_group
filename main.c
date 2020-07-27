@@ -198,7 +198,7 @@ void game_init(void) {
     printf("<(A key)      (D key)>\n");
     printf("        V(S key)      \n");
     printf("[    Make WALL   ] →　space key\n");
-    printf("[ Throw SnowBall ] →  Click\n");
+    printf("[ Throw SnowBall ] →  Click \n");
     printf("---------------------------\n");
 
     tid = ws_createPlayer(f_info->me, &f_info->me->id);
