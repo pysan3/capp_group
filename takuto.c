@@ -81,8 +81,68 @@ typedef struct {
 } ENEMY_THREAD_INFO;
 ENEMY_THREAD_INFO *enemy_thread;
 
+GLubyte *background;
+#define BACKGROUND_WIDTH 512
+#define BACKGROUND_HEIGHT 512
+
+void load_background(GLubyte *data) {
+    int size = BACKGROUND_WIDTH * BACKGROUND_HEIGHT * 3;
+    data = (GLubyte *)malloc(size);
+    FILE *fp;
+    if ((fp = fopen("../img/background.raw", "rb")) != NULL) {
+        fread(data, size, 1, fp);
+        fclose(fp);
+    } else {
+        perror("img load");
+    }
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+void draw_background(void) {
+    // GLint oldMatrixMode;
+    // glGetIntegerv(GL_MATRIX_MODE, &oldMatrixMode);
+    // glMatrixMode(GL_PROJECTION);
+    // glPushMatrix();
+    // glLoadIdentity();
+    // glRasterPos2i(-1, -1);
+    // // glPixelZoom(1, 1);
+    // glDrawPixels(BACKGROUND_WIDTH, BACKGROUND_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, background);
+    // glPopMatrix();
+    // glFlush();
+    // glMatrixMode(oldMatrixMode);
+    static const GLfloat color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
+
+    /* 材質の設定 */
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+
+    /* テクスチャマッピング開始 */
+    glEnable(GL_TEXTURE_2D);
+
+    /* １枚の４角形を描く */
+    glNormal3d(0.0, 0.0, 1.0);
+    glBegin(GL_QUADS);
+  glTexCoord2d(0.0, 1.0);
+  glVertex3d(-1.0, -1.0,  0.0);
+  glTexCoord2d(1.0, 1.0);
+  glVertex3d( 1.0, -1.0,  0.0);
+  glTexCoord2d(1.0, 0.0);
+  glVertex3d( 1.0,  1.0,  0.0);
+  glTexCoord2d(0.0, 0.0);
+  glVertex3d(-1.0,  1.0,  0.0);
+    glEnd();
+
+    /* テクスチャマッピング終了 */
+    glDisable(GL_TEXTURE_2D);
+}
+
 void display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    draw_background();
 
     glPushMatrix();
 
@@ -125,7 +185,7 @@ void display(void) {
     // 描画盤面を入れ替える
     glutSwapBuffers();
 
-    glFlush();
+    // glFlush();
 }
 
 void update_offline_enemy(int *index) {
@@ -215,7 +275,8 @@ void init(void) {
     // 隠面除去
     glEnable(GL_DEPTH_TEST);
     // 背面除去
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
     // glCullFace(GL_FRONT);
     glCullFace(GL_BACK);
 
@@ -229,14 +290,15 @@ void init(void) {
     glMaterialf(GL_FRONT, GL_SHININESS, 80);
 
     // texture_init();
+    load_background(background);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(30.0, 16.0 / 9, 1.0, 250.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(FIELD_MAX_X / 2, FIELD_MAX_Y, FIELD_MAX_Z * sqrt(3), FIELD_MAX_X / 2, 0, FIELD_MAX_Z / 2, 0, 1, 0);
-    // gluLookAt(2, 3, 7, 0, 0, 0, 0, 1, 0);
+    // gluLookAt(FIELD_MAX_X / 2, FIELD_MAX_Y, FIELD_MAX_Z * sqrt(3), FIELD_MAX_X / 2, 0, FIELD_MAX_Z / 2, 0, 1, 0);
+    gluLookAt(0, 0, 7, 0, 0, 0, 0, 1, 0);
 
     f_info = (FieldInfo *)malloc(sizeof(FieldInfo));
     memset(f_info, 0, sizeof(FieldInfo));
