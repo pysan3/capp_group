@@ -23,7 +23,7 @@ typedef struct {
 
 #define BULLET_RADIUS 1
 #define BULLET_SPEED 1.0
-#define BULLET_DAMAGE 30
+#define BULLET_DAMAGE 10
 
 typedef struct {
     Coordinate location;
