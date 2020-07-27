@@ -37,11 +37,11 @@ void print_axes(void) {
     glVertex3f(0, 0, 0);
     glVertex3f(FIELD_MAX_X, 0, FIELD_MAX_Z);
     glVertex3f(0, 0, FIELD_MAX_Z);
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
-    glVertex3f(0, FIELD_MAX_Y, 0);
-    glVertex3f(0, 0, 0);
-    glVertex3f(FIELD_MAX_X, FIELD_MAX_Y, 0);
-    glVertex3f(FIELD_MAX_X, 0, 0);
+    //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
+    //glVertex3f(0, FIELD_MAX_Y, 0);
+    //glVertex3f(0, 0, 0);
+    //glVertex3f(FIELD_MAX_X, FIELD_MAX_Y, 0);
+    //glVertex3f(FIELD_MAX_X, 0, 0);
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
     glVertex3f(0, 0, FIELD_MAX_Z);
     glVertex3f(0, 0, 0);
@@ -89,6 +89,8 @@ void display(void) {
     // 地面の凹凸計算
     // scene();
     draw_ground();
+    draw_outside();
+    put_snowmen();
 
     update_bullets(f_info->me->id);
     update_player();
@@ -206,7 +208,8 @@ void init(void) {
     // srand(0);
     // 背景色
     // glClearColor(1.0, 1.0, 1.0, 0.0);
-    glClearColor(0.8, 0.8, 0.85, 0.0);
+    //glClearColor(0.8, 0.8, 0.85, 0.0);
+    glClearColor(0.5, 0.7, 0.9, 0.0);
     // 隠面除去
     glEnable(GL_DEPTH_TEST);
     // 背面除去

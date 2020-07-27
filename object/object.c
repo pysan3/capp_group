@@ -8,14 +8,16 @@
 	#define M_PI 3.14159265358979323846
 #endif
 
-enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK ,skyGRAY};
+enum COLOR { WHITE, BROWN, ORANGE, GRAY, BLACK ,skyGRAY, darkGRAY,WHITEs};
 GLfloat color[][4] = {
 	{ 1.0, 1.0, 1.0, 1.0 },
 	{ 0.5, 0.4, 0.35, 1.0 },
 	{ 0.99, 0.6, 0.4, 1.0 },
 	{ 0.78, 0.98, 1.0, 1.0 },
 	{ 0.0, 0.0, 0.0, 1.0 },
-	{0.2, 0.2, 0.25, 0.7}
+	{0.2, 0.2, 0.25, 0.7},
+	{0.6, 0.6, 0.6, 0.4},
+	{1.0, 1.0, 1.0, 0.4}
 };
 
 void draw_ground(void){
@@ -33,12 +35,48 @@ void draw_ground(void){
 	glPopMatrix();
 
 }
+
+void draw_outside(void){
+	glPushMatrix();
+	glBegin(GL_QUADS);
+	for(int i=0;i<25;i++){
+		if(i%2==0){
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[darkGRAY]);
+		}else{
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[WHITEs]);
+		}
+		glVertex3d(5*i-3,0,-5);
+		glVertex3d(5*i-3,0,0);
+		glVertex3d(5*i+2,0,0);
+		glVertex3d(5*i+2,0,-5);
+	}
+	for(int j=0;j<21;j++){
+		if(j%2==0){
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[WHITEs]);
+		}else{
+			glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,color[darkGRAY]);
+		}
+		glVertex3d(-3,0,5*j);
+		glVertex3d(-3,0,5*(j+1));
+		glVertex3d(0,0,5*(j+1));
+		glVertex3d(0,0,5*j);
+
+		glVertex3d(FIELD_MAX_X,0,5*j);
+		glVertex3d(FIELD_MAX_X,0,5*(j+1));
+		glVertex3d(FIELD_MAX_X+4,0,5*(j+1));
+		glVertex3d(FIELD_MAX_X+4,0,5*j);
+	}
+	glPopMatrix();
+}
+
+
 void draw_snowman(Coordinate *location){
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glPushMatrix();
     glTranslatef(location->x,location->y,location->z);
 	glRotatef(location->rotate * 180 / M_PI,0,1,0);
+	glScalef(PLAYER_HEIGHT,PLAYER_HEIGHT,PLAYER_HEIGHT);
 	glTranslatef(0,1,0);
     glutSolidSphere(1.0,30,30);
     glTranslatef(0,1.5,0);
@@ -133,16 +171,44 @@ void draw_string2(const char string[], Coordinate *location) {
 }
 
 void draw_introdutcion(void){
-	Coordinate introduction={10,18,10,0};
+	Coordinate introduction={20,18,10,0};
 	draw_string2("  w",&introduction);
 	introduction.y=16.5;
 	draw_string2(" ^",&introduction);
 	introduction.y=12;
-	introduction.x=4.5;
+	introduction.x=14.5;
 	draw_string2("a<",&introduction);
-	introduction.x=21;
+	introduction.x=31;
 	draw_string2(">d",&introduction);
-	introduction.x=10;
+	introduction.x=20;
 	introduction.y=6;
 	draw_string2("sv ",&introduction);
+}
+
+void put_snowmen(void){
+	int i;
+    Coordinate *c = (Coordinate *)malloc(sizeof(Coordinate));
+	c->x = 10; c->y = 0; c->z = -10; c->rotate = M_PI;
+	draw_snowman(c);
+	draw_snowman(c);
+	for(i=0;i<3;i++){
+		c->x += 30;
+		draw_snowman(c);
+	}
+	c->x = -10;
+	c->z = 10;
+	c->rotate = 3*M_PI/2;
+	draw_snowman(c);
+	for(i=0; i<3; i++){
+		c->z += 30;
+		draw_snowman(c); 
+	}
+	c->x = FIELD_MAX_X + 10;
+	c->rotate = M_PI/2;
+	draw_snowman(c);
+	for(i=0; i<3; i++){
+		c->z -= 30;
+		draw_snowman(c); 
+	}
+	free(c);
 }

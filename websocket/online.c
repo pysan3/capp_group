@@ -297,6 +297,7 @@ Wall *multi_getNewWall(int player_id) {
 }
 
 void multi_loadEnemies_th(threadLoadEnemy *le) {
+	while (arrivals.start_from == NULL) sleep(1);
 	if (arrivals.enemies != NULL) {
 		for (int i=0; i<ENEMY_NUM; i++) {
 			le->e[i] = arrivals.enemies[i];
@@ -305,7 +306,6 @@ void multi_loadEnemies_th(threadLoadEnemy *le) {
 	}
 	arrivals.enemies = le->e;
     free(le);
-	while (arrivals.start_from == NULL) sleep(1);
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
 	long time_wait = (arrivals.start_from->tv_sec - current_time.tv_sec) * MICRO + (arrivals.start_from->tv_usec - current_time.tv_usec);

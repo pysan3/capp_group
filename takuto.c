@@ -94,6 +94,7 @@ void display(void) {
     update_player();
     if (update_player() == EXIT_FAILURE) {
         printf("you lose\n");
+        sleep(3);
         exit(EXIT_SUCCESS);
     }
     int enemies_hp = 0;
@@ -104,9 +105,11 @@ void display(void) {
     }
     if (!enemies_hp) {
         printf("you won\n");
+        sleep(3);
         exit(0);
     } else if (f_info->elapsed_time > 60 * FPS) {
         printf("draw\n");
+        sleep(3);
         exit(0);
     }
     updata_wall(f_info->me->id);
