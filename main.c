@@ -95,7 +95,7 @@ void display(void) {
     update_bullets(f_info->me->id);
     update_player();
     if (update_player() == EXIT_FAILURE) {
-        printf("you lose\n");
+        printf("YOU LOSE\n");
         sleep(3);
         exit(EXIT_SUCCESS);
     }
@@ -106,11 +106,11 @@ void display(void) {
         enemies_hp += f_info->enemies[i]->hp > 0;
     }
     if (!enemies_hp) {
-        printf("you won\n");
+        printf("YOU WIN\n");
         sleep(3);
         exit(0);
     } else if (f_info->elapsed_time > 60 * FPS) {
-        printf("draw\n");
+        printf("DRAW\n");
         sleep(3);
         exit(0);
     }
@@ -134,7 +134,7 @@ void update_offline_enemy(int *index) {
     char name[100];
     sprintf(name, "enemy%d", enemy_id);
     Player *e = (Player *)malloc(sizeof(Player));
-    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, rand() % 4);
+    player_init(e, rand() % (FIELD_MAX_X / 2) + (FIELD_MAX_X / 4), rand() % (FIELD_MAX_Z / 2) + (FIELD_MAX_Z / 4), name, RILAKKUMA);
     tid = ws_createPlayer(e, &e->id);
     pthread_join(tid, NULL);
     printf("enemy %d, id: %d, hp: %d\n", enemy_id, e->id, e->hp);
@@ -165,11 +165,11 @@ void game_init(void) {
         scanf("%d", &user_input);
         if (user_input == -1) {
             f_info->isOnline = ws_createNewGameID();
-            printf("received a new gameID from server: %d\n", f_info->isOnline);
-            printf("tell your friends the gameID so you can play together!\n");
+            printf("Received a new gameID from server: %d.\n", f_info->isOnline);
+            printf("Tell your friends the gameID so you can play together!\n");
         } else {
             f_info->isOnline = user_input;
-            printf("you set the GameID: %d\n", f_info->isOnline);
+            printf("You set the GameID: %d.\n", f_info->isOnline);
         }
     } else {
         f_info->isOnline = 0;
@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
     // glutInitWindowPosition(0, 0);
     glutInitWindowSize(1280, 720);
-    glutCreateWindow("Group A");
+    glutCreateWindow("Snowball Fight");
     init();
     glutDisplayFunc(display);
     glutMainLoop();
