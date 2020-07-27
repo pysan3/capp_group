@@ -32,7 +32,7 @@ add_library(websocket SHARED ${websocket_files})
 target_include_directories(websocket PRIVATE websocket/)
 target_link_libraries(websocket PRIVATE ws_api)
 target_compile_options(websocket PRIVATE -Wno-incompatible-pointer-types -Wno-stringop-truncation)
-target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
+# target_compile_definitions(websocket PRIVATE MYSERVER=1) # connect to localhost
 
 FILE(GLOB fps_files fpsControl/*.c)
 add_library(fps SHARED ${fps_files})
