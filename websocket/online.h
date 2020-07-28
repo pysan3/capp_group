@@ -4,20 +4,26 @@
 
 int multi_createNewGameID(void);
 
-int multi_init(int gameID);
+int multi_init(int gameID, int *time);
 
-pid_t multi_createPlayer(Player *p, int *id);
+int multi_close(int gameID);
 
-pid_t multi_sendPlayer(Player *p);
+void multi_createPlayer_th(threatPlayer *tp);
 
-pid_t multi_sendNewBullet(Bullet *b);
+void multi_sendPlayer_th(Player *p);
 
-pid_t multi_sendNewWall(Wall *w);
+void multi_sendNewBullet_th(playersBullet *pb);
+
+void multi_sendNewWall_th(playersWall *pw);
 
 Player *multi_getEnemyInfo(int id);
 
-Bullet *multi_getNewBullet(void);
+Player **multi_getAllEnemyInfo(int player_id);
 
-Wall *multi_getNewWall(void);
+Bullet *multi_getNewBullet(int player_id);
 
-pid_t multi_loadEnemies(Player *e);
+Wall *multi_getNewWall(int player_id);
+
+void multi_loadEnemies_th(threadLoadEnemy *le);
+
+void multi_dead_th(threatPlayer *tp);

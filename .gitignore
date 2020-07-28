@@ -5,11 +5,12 @@
 build/
 
 test*
+!test/
 
 websocket/*
 !websocket/*.[hc]
 !websocket/ws_api/
-
+.DS_Store
 # これ以降はVisual Studioの各種設定ファイル
 
 .vscode/

@@ -197,7 +197,6 @@ void pocket(double max_r) {
     glPushMatrix();
     glTranslatef(max_r, 0, -0.7);
     glRotate(0, -M_PI / 64, 0);
-    GLfloat new[] = {0.3, 0.3, 0.3, 1};
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
     glBegin(GL_TRIANGLE_FAN);
     glVertex3d(0, 0, 0);
@@ -284,6 +283,10 @@ void body(void) {
 
 void draw_doraemon(void) {
     glPushMatrix();
+    glRotatef(-90,1,0,0);
+    // glRotatef(-90,0,0,1);
+    glTranslatef(0,0,1.5);
+    glScalef(0.8,0.8,0.8);
 
     // 顔
     glPushMatrix();
